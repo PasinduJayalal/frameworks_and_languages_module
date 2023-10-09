@@ -2,6 +2,7 @@ Client Frameworks
 =================
 
 Objectives
+----------
 1. Understand the requirements for the client component of the assessment
 2. Understand how we can manipulate dynamic webpages with the javascript DOM
 3. Understand how we can perform HTTP requests in javascript
@@ -9,6 +10,11 @@ Objectives
     * vue.js
     * hyperapp
     * react
+
+Other
+-----
+
+* GitHub - fetch upstream
 
 
 Demo Client Example (15min)
@@ -23,18 +29,17 @@ Demo Client Example (15min)
         * `run_your_client_with_example_server`
         * `test_your_client_with_example_server`
     * Running on GitHub Actions
-* GitHub FETCH UPSTREAM!!!!
 
 
 
-Types of Web Applications (10min)
+Types of Web Applications (15min)
 -------------------------
 
 (A simplified and not entirely accurate overview)
 
 * Server Rendered 
-    * (majority of sites before 2014)
-    * Older model - invented when browsers were less capable and had less features
+    * (majority of dynamic websites before 2014)
+    * Invented when browsers were less capable and had less features
     * Loads/Requests entire new page every link/click/action
     * Server template rendering
     * Example
@@ -50,7 +55,7 @@ Types of Web Applications (10min)
         * [React] javascript
         * [angular] javascript
         * [vue] javascript
-* Static Site Generation 
+* Static Site Generation
     * (grew significantly in popularity form 2014)
     * Generate entire (static) site (efficiently) on data change
     * Example
@@ -61,6 +66,8 @@ Types of Web Applications (10min)
 
 Browser: Document Object Model (DOM) (30min)
 --------------------------------------------
+
+* visit the url `about:blank`, press `F12` for developer tools, view `console`
 
 ```javascript
 // Open a blank browser tab and bring up devtools (F12)
@@ -85,6 +92,7 @@ document.body.appendChild(text)  // you still have a variable `text` and can re-
 
 // TASK:
 // 1.) using the techniques above create the following html structure with javascript code
+//   hints - you need to create a `ul` -> add it to the dom -> create `li` add it as a child to `ul`
 /*
 <ul>
     <li data-id="a">Bread</li>
@@ -102,7 +110,7 @@ Questions
     * Do you think this could be reduced?
     * Hint: client frameworks will have a way of reducing this
 * Understand
-    * DOM functions `createElement`, `appendChild`, `textContent`, `data`, `querySelector`
+    * DOM functions `createElement`, `appendChild`, `textContent`, `dataset['xx']`->`data-xx`, `querySelector`
     * Creating DOM elements in plain javascript is cumbersome and hard to follow
     * `data` attributes and how they can be selected/found with query (IMPORTANT CONCEPT)
 
@@ -135,10 +143,12 @@ document.querySelector(`[data-id='b']`).remove()
 </details>
 
 
-Client Frameworks (5min)
+Client Frameworks (10min)
 -----------------
 
-Why?
+* Question:
+    * Given working with the DOM is long winded and a pain in the ass ... 
+    * Why do we have client frameworks?
 
 * Separate out:
     * State
@@ -147,119 +157,20 @@ Why?
         * (You do not change the state - the framework calls your functions to manipulate the state when needed)
     * Template/Visuals/Look
         * (You do not manipulate/manage the DOM, the framework does)
-* Every time we change our application’s _state_, with our _actions_ (functions), we need to update the _template_ (UI/DOM) to match.
+* Every time we change our application’s _state_, with our _actions_ (functions), the framework efficiently re-renders the _template_ (UI/DOM) to match.
 * Considering
     * Async/multithreading (things happen at different times and take indeterminate time)
 
 
-Client/Browser communication with ServerAPI (15min)
--------------------------------------------
-
-Interacting with our API from client browser javascript
-
-```javascript
-// Open a blank browser tab and bring up devtools (F12)
-// Copy and paste the code below
-//   These are javascript equivalent of `curl` statesmen's from previous session
-// Start `example_server` api (suggest: `make run_example_server`)
-// Set `urlAPI` to your server address. (It MUST not end with a `/` as path is appended e.g. `/items`)
-// TASK: using the devtools console
-//   - add 3 items
-//   - get the item list (explore in devtools)
-//   - delete the middle item
-
-urlAPI = 'http://localhost:8000'
-testItem = {
-    user_id: "bob",
-    lat: 1,
-    lon: 1,
-    image: "http://placekitten.com/100/100",
-    keywords: "a, b, c",
-    description: "a test item that is great",
-}
-
-let items = []
-
-function getItems() {
-    fetch(`${urlAPI}/items`, {
-        method: 'GET',
-    })
-        .then(response => response.json())
-        .then(json => {
-            console.log("getItems", json)
-            items = json  // save the json we got back into the variable `items`
-        })
-    .catch(err => console.error(err))
-}
-
-function createItem(data) {
-    fetch(`${urlAPI}/item`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data),
-    })
-        .then(response => response.json())
-        .then(json => console.log('createItems()', json))
-    .catch(err => console.error(err));
-}
-
-function deleteItem(item_id) {
-    fetch(`${urlAPI}/item/${item_id}`, {
-        method: 'DELETE',
-    })
-        .then(json => console.log('deleteItem()', json))
-    .catch(err => console.error(err));
-}
-```
 
 
-Helpers for Assignment 1: Client (notes)
---------------------------------
-
-### Helper HTML
-```html
-<h2>Create</h2>
-<form>
-    <input name="user_id" placeholder="user_id">
-    <input name="lat" placeholder="lat">
-    <input name="lon" placeholder="lon">
-    <input name="image" placeholder="image">
-    <input name="keywords" placeholder="keywords">
-    <textarea name="description" placeholder="description"></textarea>
-    <button data-action="create_item">Create Item</button>
-</form>
-<!-- Hints
-    1.) Prevent default onSubmit behaviour
-    2.) Bind all inputs to data model
-    3.) Bind POST action to button
--->
-
-<h2>Items</h2>
-<ul>
-    <li><!-- Somehow templated for each item -->
-        <img src="item.image">
-        <span data-field="id">??? item.id ???</span>
-        <span data-field="lat">??? item.lat ???</span>
-        ...
-        <button data-action="delete" someKindOfOnClickAction="deleteItem(item.id)">Delete</button>
-    </li>
-</ul>
-```
-
-### Helper QueryString
-```javascript
-    // http://HOST:PORT/ADDRESS/OF/PAGE.HTML?query_param1=a&query_param2=b&api=http://localhost:8000
-    // Get api url (default to `CURRENT_HOST/api/v1`) (and remove trailing slash if present)
-    const urlParams = new URLSearchParams(window.location.search);
-    const urlAPI = (urlParams.get('api') || '/api/v1').replace(/\/$/, '');
-```
-
-
-HTML Boilerplate (5min)
+HTML Boilerplate (10min)
 ----------------
 
 Anatomy of basic html page (for upcoming tutorials)
 
+
+`index.html`
 ```html
 <!DOCTYPE html>
 <html>
@@ -288,26 +199,43 @@ Anatomy of basic html page (for upcoming tutorials)
 </html>
 ```
 
+* `mkdir my_cool_html_folder`
+    * create `index.html` with boilerplate above
+* To serve local folder via http
+    * `python -m http.server 8001`
+* (extra) to server static files from container
+    * suggest [nginx](https://www.nginx.com/)
+    * see `Dockerfile` in `examples/client/vue_test` or `examples/client/hyperapp`
+* Note about `index.html`
+    * Any file called this will load by default at the root path `/`
 
-Vue.js (45min)
+
+
+Vue.js (1 hour)
 ------
 
 * [vuejs.org](https://vuejs.org/)
     * See _Why Vue.JS_ video (3min)
-    * [vuejs.org/guide/quick-start.html#using-vue-from-cdn](https://vuejs.org/guide/quick-start.html#using-vue-from-cdn)
-    * [vuejs.org/tutorial](https://vuejs.org/tutorial/)
+        * Lots of techno babel - important concept "progressive framework"
+    * [vuejs.org/guide/quick-start.html#enabling-import-maps](https://vuejs.org/guide/quick-start.html#enabling-import-maps)
     * [vuejs.org/examples](https://vuejs.org/examples/)
+        * `Options` API (rather than `Composition`) and `HTML` (rather than `SFC`(SingleFileComponent))
+        * Go thought all the `Basic` items
+            * especially https://vuejs.org/examples/#handling-input
 * Example
     * [frameworks_and_languages_module/examples/client/vue_test](https://github.com/calaldees/frameworks_and_languages_module/tree/main/examples/client/vue_test)
-    * You could choose to use the `npm init vue` method. See react example for tips on containerising
+        * Using `nginx` server
+    * You could choose to use the `npm init vue` method. See react example for tips on containerising - but this creates loads of file and needs the vue server to build and serve the code'
 
 ### Concepts
+
+* Progressive (you don't need EVERYTHING to start with, you can use/add more of the framework incrementally as you need it)
 * State, View and Actions are separate
 * Template/View (can be) made in html and mounted/attached to code (`v-if`, `v-for`)
-    * Vue components (advanced concept) can be separate/modular
+* Vue components (advanced concept) can be separate/modular
 
 ### Further Reading
-* [VueMastery - Intro to Vue 3](https://www.vuemastery.com/courses/intro-to-vue-3/intro-to-vue3/) 
+* [VueMastery - Intro to Vue 3](https://www.vuemastery.com/courses/intro-to-vue-3/intro-to-vue3/)
     * 20min video (1 hour to do?) video course for complete shopping basket with repo example
 
 ### Hint for assignment
@@ -324,7 +252,11 @@ HyperApp Tutorial (45min)
 * [Hyperapp](https://github.com/jorgebucaran/hyperapp)
     * Tiny 1k framework
 * Try _Todo example_ in CodePen
+* serve the todo file yourself
+    * `Makefile` + `Dockerfile` on port 8001
+* [package: hyperapp/html](https://github.com/jorgebucaran/hyperapp/tree/main/packages/html)
 * [Tutorial](https://github.com/jorgebucaran/hyperapp/blob/main/docs/tutorial.md)
+    * is a bit heavy going
 * Example
     * [frameworks_and_languages_module/examples/client/hyperapp](https://github.com/calaldees/frameworks_and_languages_module/tree/main/examples/client/hyperapp)
 
@@ -342,52 +274,45 @@ React (1hour)
 Facebook
 200kb
 
-* Beta [beta.reactjs.org/learn](https://beta.reactjs.org/learn)
-    * (Beta; Looks like a better tutorial, but incomplete, so I have some more bits below)
+* [react.dev/learn](https://react.dev/learn)
+    * is incomplete - they push you to extended frameworks - so I have some more bits below
 * Setup
     * `npx create-react-app my-app` && `cd my-app` && `npm start`
-    * `rm src/*`
-    * `index.js`
+        * > added 1458 packages in 2m
+        * `du -shc node_modules/` .. yes .. you read xxxMB correctly! .. react is one fat chunky monkey
+    * `rm src/*` remove the spiny example crud
+    * `src/index.js`
         * ```javascript 
             import React from 'react';
             import ReactDOM from 'react-dom/client';
 
-            import RootComponent from './myapp';
+            import RootComponent from './App';
 
             const root = ReactDOM.createRoot(document.getElementById("root"));
             root.render(<RootComponent />);
             ```
-    * `myapp.js` -> copy `MyButton` and `MyApp` example from [beta.reactjs.org/learn](https://beta.reactjs.org/learn)
-* Old [Tutorial: Intro to React](https://reactjs.org/tutorial/tutorial.html)
-    * How to
-        1. Copy `index.js` from tutorial into `tictactoe.js`. Replacing the `cont root ...; root.render` -> `export default Game`
-        2. `import RootComponent from './tictactoe';`
-    * Build O's and X's
+    * `src/App.js` -> copy from https://react.dev/learn `MyButton` `MyApp`
+    * Profile Example
+        * create `profile.css` and `profile.js`. 
+        * add `import './profile.css';` to profile.js. 
+        * Update `import RootComponent from './profile';`
+    * Products Example
+        * create `products.js`
+    * Actions/Buttons Example
+        * create `action_example_1.js`
+        * create `action_example_2.js`
+* TicTacToe
+    * create `tictactoe.js` (copy from full `App.js` example - click 'fork' to get codesandbox.io)
+        * add `import './tictactoe.css';`
+    * create `tictactoe.css` (copy from full example)
+    * Update `index.js` with `import RootComponent from './tictactoe';`
     * Follow tutorial and stop at _Adding Time Travel_ (The history is very cool though)
 
-<details>
-<summary>old instructions</summary>
-
-* Setup
-    * `.env`
-        * ```
-            FAST_REFRESH=false
-            ```
-    * `src/index.tsx` -> `src/index.backup.tsx`
-    * `src/index.tsx`
-        * ```
-            import './index2'
-            ```
-    * From [React Tutorial: Setup Option 2: Local Development Environment](https://reactjs.org/tutorial/tutorial.html#setup-option-2-local-development-environment)
-        * `index2.js` copy from source (edit line with `index.css` -> `index2.css`)
-        * `index2.css` copy from source
-</details>
 
 ### Concepts
 * Compiler transforms _inline html_ into javascript code to dynamically create elements
     * `jsx` files
     * Q: What problem is `jsx` trying to solve
-        * [React tutorial; what is react](https://reactjs.org/tutorial/tutorial.html#what-is-react) -> see babel
 * State separate from components
 * Lifting state up
     * Components do not communicate with each other (except though shared functions/actions)
@@ -425,6 +350,7 @@ Client Further Reading
 * [Simple, Modern JavaScript](https://vue-mjs.web-templates.io/blog/javascript) 2023
     * Doing most things with vue3 and tailwind
 
+
 Other Client frameworks
 -----------------------
 
@@ -441,6 +367,7 @@ These looks cool. I've not investigated them.
     * Elm is a functional language that compiles to JavaScript. It helps you make websites and web apps. It has a strong emphasis on simplicity and quality tooling.
 * [Fresh](https://fresh.deno.dev/)
 
+
 Unsorted
 ========
 Linked in [other-frameworks.md](09 other-frameworks.md)
@@ -450,7 +377,8 @@ Linked in [other-frameworks.md](09 other-frameworks.md)
 * [Building a Frontend Framework; Reactivity and Composability With Zero Dependencies](https://18alan.space/posts/how-hard-is-it-to-build-a-frontend-framework.html)
     * No dependencies.
     * No build-step before it can be used.
-* [vanilla-fp](https://github.com/abuseofnotation/vanilla-fp)
-    * The no-framework framework for building component-based purely-functional UIs.
-* [VanJS](https://github.com/vanjs-org/van)
-    *  🍦VanJS (Vanilla JavaScript): World's smallest reactive UI framework 
+* Without a framework (sometimes called 'vanilla javascript') - patters
+    * [vanilla-fp](https://github.com/abuseofnotation/vanilla-fp)
+        * The no-framework framework for building component-based purely-functional UIs.
+    * [VanJS](https://github.com/vanjs-org/van)
+        * 🍦VanJS (Vanilla JavaScript): World's smallest reactive UI framework 
