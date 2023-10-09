@@ -49,12 +49,17 @@ History + Terms
 * [REST: Representational state transfer](https://en.wikipedia.org/wiki/Representational_state_transfer)
     * > RESTful web APIs are typically loosely based on HTTP methods to access resources via URL-encoded parameters and the use of JSON or XML to transmit data.
     * GET, POST, DELETE, PUT, PATCH
+    * REST is loosely related to CRUD in database's
+    * A layer of abstraction from datastore with some business/application logic
 * [Common Gateway Interface (CGI)](https://en.wikipedia.org/wiki/Common_Gateway_Interface)
     * Just drop a script in an executable folder (new process on each request)
-* [Web Server Gateway Interface (WSGI)](https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface)
-    * Connect web server (Apache, Nginx) to application logic (Python)
-* [Asynchronous Server Gateway Interface (ASGI)](https://en.wikipedia.org/wiki/Asynchronous_Server_Gateway_Interface)
-    * [Difference between WSGI and ASGI?](https://medium.com/analytics-vidhya/difference-between-wsgi-and-asgi-807158ed1d4c)
+* Web Server (Python example)
+    * > WSGI is a standard interface which allows to seperate server code from the application code where you add your business logic. WSGI succeeded in allowing much more freedom and innovation in the Python web space.
+    * But can't handle persistant http2 and websocket connections required by some modern services
+    * [Web Server Gateway Interface (WSGI)](https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface)
+        * Connect web server (Apache, Nginx) to application logic (Python)
+    * [Asynchronous Server Gateway Interface (ASGI)](https://en.wikipedia.org/wiki/Asynchronous_Server_Gateway_Interface)
+        * [Difference between WSGI and ASGI?](https://medium.com/analytics-vidhya/difference-between-wsgi-and-asgi-807158ed1d4c)
 * [Middleware](https://en.wikipedia.org/wiki/Middleware)
     * Pre-request + Post-response hooks
     * Like _decorators_ (the language feature we looked at in the languages session)
@@ -88,7 +93,7 @@ Features probably not needed for Assignment 1
 * Serializers (output data)
     * Streams
 * Security/Authentication framework
-* Websockets (realtime)
+* Websockets (realtime bi-directional)
 * Plugin or expansion framework
 
 
@@ -109,11 +114,22 @@ Let's do a tutorial to find out what the components are.
 * https://www.djangoproject.com/
     * Install Django
     * Tutorial Part 1 to Part 3
-* Tutorial (first 3 parts)
 * Let's live code!
+    * new codespace (on your fork)
+    * ![github-codespace-new](images/github-codespace-new.gif)
+    * or https://github.com/codespaces/ (quick start 'blank')
     * https://gitpod.io/#https://github.com/gitpod-io/template-python-django
+    * `f1` toggle autosave (off)
+    * Skip `python manage.py shell` model bit
+    
 
-Quick note
+<details>
+<summary>Implementation notes</summary>
+
+* Part2 of tutorial missed out adding `Choice` to admin?
+    * `admin.site.register(Choice)`
+
+csrf trusted origins? no longer needed?
 ```python
 # mysite/settings.py 
 # addition
@@ -123,10 +139,23 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.gitpod.io',
 ]
 ```
-In django templates
+
+```python
+from django.core import serializers
+from django.http import JsonResponse
+def index(request):
+    return JsonResponse(
+        serializers.serialize("python", Question.objects.all()),
+        safe=False,
+    )
 ```
-{# <p>This is comment</p> #}
+
 ```
+{# <p>This is comment in Django templates</p> #}
+```
+</details>
+
+
 
 #### Further Django Reading
 * [Django Girls Tutorial](https://tutorial.djangogirls.org/en/)
@@ -149,10 +178,15 @@ In django templates
 
 
 * http://falconframework.org/
-    * https://falcon.readthedocs.io/en/stable/user/quickstart.html
+    * [quickstart](https://falcon.readthedocs.io/en/stable/user/quickstart.html)
+    * [on_post req.media](https://falcon.readthedocs.io/en/stable/api/media.html#usage)
 
-Let's build it in gitpod - livecode - containerize
-* bind/host to `0.0.0.0` + explain
+Let's build it - livecode
+* combine 
+    * falconframework.org `sample.py` (we don't want gunicorn)
+    * quickstart `things.py` (we want the json return from sample.py)
+* containerize (just watch, you'll attempt this later)
+    * Build Makefile and Dockerfile
 
 * https://www.fullstackpython.com/falcon.html
     * > Falcon is a WSGI-compliant web framework designed to build RESTful APIs without requiring external code library dependencies.
@@ -182,77 +216,44 @@ https://www.django-rest-framework.org/tutorial/quickstart/
 
 
 
-# ASP Core dotnet (c#)
+### ASP Core dotnet (c#)
 
-
-* see `/examples/server/dotnet*`
-    * My demo for building and running Microsofts demo TodoApi app in docker containers
-1. build and run the example application
-    * `http://localhost:5000/WeatherForecast`
-2. Inspect the `TodoApi` folder
-    * Try to identify the components of the web app
-    * Look at the `Dockerfile`. Try to understand the steps it might be doing
-
-### Further c# notes
-
-
-* [ASP.NET Web API Tutorials](https://www.tutorialsteacher.com/webapi)
-* [REST API in C#](https://www.kindsonthegenius.com/how-to-create-rest-api-in-net-using-c-and-visual-studio/)
-* [SAP NET Introduction](https://www.c-sharpcorner.com/UploadFile/4b0136/restful-api-in-Asp-Net-introduction-of-rest-web-api/)
-* [Using System.Text.Json in a Web API Project](https://code-maze.com/introduction-system-text-json-examples/)
-* [OWIN](http://owin.org/) - Open Web Interface for .NET
-
-
-
-### Nancy (c#)
-
-Dead project
-
-https://www.reddit.com/r/dotnet/comments/frq6yh/nancyfx_is_dead_what_next/
-
-http://nancyfx.org/
-https://www.nuget.org/packages/Nancy#readme-body-tab
-```
-mkdir nancy_test
-cd nancy_test
-dotnet new console
-dotnet add package Nancy --version 2.0.0
-```
-https://github.com/jpf/dotnet-core-and-nancy-example
-
-
-
-https://github.com/karasek/OWIN-Test-Samples
-SignalIR
-Other C#
-TODO: https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor
-https://github.com/markrendle/Flux
+1. build and run the example application (probably want to do these commands separately)
+    * `mkdir -p dotnettest && cd dotnettest && dotnet new web && dotnet run`
+        * open webpage at port `5156`
+    * (more examples at `/examples/server/dotnet6`)
+2. add json return
+    * for route `/test` based on https://learn.microsoft.com/en-gb/aspnet/core/fundamentals/use-http-context?view=aspnetcore-7.0#get-request-headers
 
 
 ### Falco (F#)
 
-https://github.com/pimbrouwers/Falco F# functional
-* > Functional-first toolkit for building brilliant ASP.NET Core applications using F#. 
+* https://www.falcoframework.com/
+    * > Functional-first toolkit for building brilliant ASP.NET Core applications using F#. 
+    * https://github.com/pimbrouwers/Falco F# functional
+    
 
-### Stl.Fusion (C#)
+### Blazor (C#)
 
 Abstracting the entire server/client into one amorphous mega blog that deploys on the cloud
 
-* https://github.com/servicetitan/Stl.Fusion C# Super server+client mega solution
+* [Blazor](https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor)
+    * server/client state super framework (covered in later session)
     * Key concept - "eventual consistency" - creating invalidation methods is key
+    * https://github.com/servicetitan/Stl.Fusion C# Super server+client mega solution
 
 
-### Snaic (python async)
+### Sanic (python async)
 
 
 * https://sanicframework.org/
 
 1. Follow "Getting Started" and run the basic app
     * https://sanicframework.org/en/guide/getting-started.html#getting-started
+2. TASK: Add a response to the path `/test` to return the json `{"foo": "bar"}` - test the response with `curl` and browser
     * https://sanicframework.org/en/guide/basics/response.html#methods
     * https://sanic.dev/en/guide/deployment/development.html#cli
         * `--debug`
-2. Add a response to the path `/test` to return the json `{"foo": "bar"}` - test with curl and browser
 3. Build a docker container to run this
     * `Dockerfile`
         * ```Dockerfile
@@ -267,7 +268,7 @@ Abstracting the entire server/client into one amorphous mega blog that deploys o
         * ```Makefile
             DOCKER_IMAGE:=sanic_test
             build:
-                docker build --tag {DOCKER_IMAGE} .
+                docker build --tag ${DOCKER_IMAGE} .
             run:
                 docker run --rm -it --publish 8000:8000 ${DOCKER_IMAGE}
             ```
@@ -282,17 +283,16 @@ Abstracting the entire server/client into one amorphous mega blog that deploys o
     * Throughput
         * https://sanicframework.org/en/guide/basics/handlers.html#a-word-about-async
 * [Awesome Sanic](https://github.com/mekicha/awesome-sanic) - A curated list of awesome Sanic resources and extensions
-* [Python RESTful Web Framework Generator](https://github.com/guokr/swagger-py-codegen)
+
 
 
 ### Express.js (javascript)
 
-1. Create stub app
+1. Create stub app (in new folder e.g. `expresstest`?)
     * https://expressjs.com/
     * https://expressjs.com/en/starter/hello-world.html
-    * https://expressjs.com/en/guide/routing.html
-        * `res.json()` https://expressjs.com/en/4x/api.html#res.json
 2. Add a response to the path `/test` to return the json `{"foo": "bar"}` - test with curl and browser
+    * `res.json()` https://expressjs.com/en/4x/api.html#res.json
 3. Create Container
     * Dockerfile
         * ```Dockerfile
@@ -308,9 +308,10 @@ Abstracting the entire server/client into one amorphous mega blog that deploys o
             build:
                 docker build --tag ${DOCKER_IMAGE} .
             run:
-                docker run --publish 8000:8000 ${DOCKER_IMAGE}
+                docker run --rm --publish 8000:8000 ${DOCKER_IMAGE}
             ```
     * Exiting from docker
+        * By default express does not listen to SIGNALS. We need this extra line to allow docker to close on `ctrl + c`
         * ```javascript
             // Docker container exit handler - https://github.com/nodejs/node/issues/4182
             process.on('SIGINT', function() {process.exit()})
@@ -341,7 +342,6 @@ Abstracting the entire server/client into one amorphous mega blog that deploys o
 
 ### Laravel (php)
 
-
 * https://laravel.com/
     * Look at the echo system
 * https://laravel.com/docs/8.x#getting-started-on-linux
@@ -365,7 +365,6 @@ Abstracting the entire server/client into one amorphous mega blog that deploys o
 
 I want to create a docker demo of this soon
 
-
 ### Echo (golang)
 
 * [echo](https://github.com/labstack/echo) -  High performance, minimalist Go web framework 
@@ -380,6 +379,11 @@ I want to create a docker demo of this soon
 
 * [Zotonic, the Erlang Web Framework](http://zotonic.com/)
 
+
+### Phoenix (Elixir) (functional)
+* https://www.phoenixframework.org/
+    * based on [elixir](https://elixir-lang.org/) function language
+
 ### FastAPI (Python)
 
 https://fastapi.tiangolo.com/features/
@@ -388,28 +392,18 @@ Has validators/schema and basic boilerplate for most apps, oauth, auto doc
 
 ### Pyramid (Python)
 
-https://trypyramid.com/
-https://docs.pylonsproject.org/projects/pyramid/en/2.0-branch/quick_tutorial/index.html
-https://docs.pylonsproject.org/projects/pyramid/en/2.0-branch/quick_tutorial/json.html
-Tests
+* https://trypyramid.com/
+    * https://docs.pylonsproject.org/projects/pyramid/en/2.0-branch/quick_tutorial/index.html
+    * https://docs.pylonsproject.org/projects/pyramid/en/2.0-branch/quick_tutorial/json.html
 
+* Testing as part of the framework
 * Decoupled views routed with decorators
 * No built in templating language (you select one)
 * No built in database ORM - you select one - SQLAlchemy is great
 * Supports an alternate routing method called _traversal_ (dynamic)
     * [Hello Traversal World](https://docs.pylonsproject.org/projects/pyramid/en/2.0-branch/narr/hellotraversal.html)
 
-# Phoenix (Elixir) (functional)
-    * https://www.phoenixframework.org/
 
-
-Assignment 2
-------------
-
-* Demo 
-    * Markdown template + markdown
-    * Feature example (django orm) 
-    * Weekly writing workshop 
 
 
 
@@ -430,9 +424,10 @@ Further Reading
     * `problems with ...`
     * `my experiences with ...`
 * Popularity, addons/plugins/extensions, community
+    * Look at download statistics
     * [npmjs.com](https://www.npmjs.com)
         * [npmjs.com/package/express](https://www.npmjs.com/package/express)
-            * Look at download statistics
+            
     * [pypi.org](https://pypi.org/)
         * https://pypistats.org/
             * https://pypistats.org/packages/django
@@ -450,6 +445,8 @@ Unsorted
 
 * [PostgREST](https://postgrest.org/)
     * > PostgREST is a standalone web server that turns your PostgreSQL database directly into a RESTful API. The structural constraints and permissions in the database determine the API endpoints and operations.
+    * [A poor man's API](https://blog.frankel.ch/poor-man-api/)
+        * PostgREST example
 
 * [The Best NodeJS Frameworks for 2021](https://rapidapi.com/blog/best-nodejs-frameworks/)
     * Performance community ease of use, best for
@@ -459,6 +456,8 @@ Unsorted
         * Meteor
         * Loopback
 
-
-* [A poor man's API](https://blog.frankel.ch/poor-man-api/)
-    * PostgREST example
+* generating stubs from `openapi.yaml` spec
+    * [Python RESTful Web Framework Generator](https://github.com/guokr/swagger-py-codegen)
+        * (not maintained, out of date)
+    * https://swagger.io/tools/swagger-codegen/
+        * https://editor-next.swagger.io/ can generate static servers (ew)

@@ -4,8 +4,17 @@
     <meta charset="utf-8" />
     <link id="favicon" rel="shortcut icon" type="image/png" href="data:image/png;base64,....==" />
     <title>Vue.js Test</title>
-    <!-- See Makefile for complete local run rather than cdn <script src="vue.global.js"></script> -->
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script> <!-- https://vuejs.org/guide/quick-start.html#using-vue-from-cdn -->
+    
+    <!-- https://vuejs.org/guide/quick-start.html#enabling-import-maps -->
+    <!-- Change the path to  ./vue.esm-browser.js for complete local run -->
+    <script type="importmap">
+        {
+          "imports": {
+            "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+          }
+        }
+    </script>
+    
     <style>
         /* -- Style -- */
     </style>
@@ -13,26 +22,25 @@
 <body>
     <h1>Vue.js Test</h1>
 
-    <!-- Approximation of SingleFileComponent `.vue` within an html boilerplate https://vuejs.org/guide/introduction.html#single-file-components -->
-    <!-- copy/paste from https://vuejs.org/guide/introduction.html#what-is-vue -->
+<!-- copy/paste from https://vuejs.org/guide/introduction.html#what-is-vue -->
 
-    <!-- Template -->
-    <div id="app">
-      <button @click="count++">
-        Count is: {{ count }}
-      </button>
-    </div>
+<div id="app">
+    <button @click="count++">{{ count }}</button>
+</div>
 
-    <!-- Script -->
-    <script type="module">
-        const { createApp } = Vue
-        createApp({
-            data() {
-                return {
-                    count: 0
-                }
+<script type="module">
+    import { createApp } from 'vue'
+
+    const app = createApp({
+        data() {
+            return {
+                count: 0
             }
-        }).mount('#app')
-    </script>
+        }
+    })
+
+    app.mount('#app')
+</script>
+
 </body>
 </html>
