@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>html test</title>
+    <style>
+        h1 {
+            color: red;
+            font-size: 3em;
+        }
+
+        ul li {
+            list-style-type: square;
+        }
+
+        #my_list li {
+            display: inline-block;
+            border-radius: 1em;
+            background-color: lightgray;
+            padding: 1em;
+            margin: 1em;
+            transition: all 2000ms linear;
+            transition-property: border-radius,background-color ;
+        }
+        #my_list li:hover {
+            background-color: red;
+        }
+        .big #my_list li {
+            padding: 2em;
+            font-size: larger;
+        }
+
+        .highlight {
+            color: greenyellow;
+        }
+        @media only screen and (max-width: 600px) {
+        body {
+            background-color: lightblue;
+        }
+}
+    </style>
+</head>
+<body>
+    <h1>My Heading</h1>
+    <ul id="my_list">
+        <li>Thing</li>
+        <li>Thing again</li>
+        <li class="highlight">Thing more</li>
+    </ul>
+    <ul>
+        <li class="highlight">Another list</li>
+        <li>Another list2</li>
+    </ul>
+    <button id="big_button">Make Big</button>
+
+    <script type="module">
+        const $body = document.getElementsByTagName("body")[0];
+        const $element = document.getElementById("big_button");
+        $element.addEventListener("click", event => {
+        $body.classList.toggle("big");
+        });
+    </script>
+</body>
+</html>

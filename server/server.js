@@ -22,6 +22,10 @@ let ITEMS=[{
   "date_to": "2023-10-25T21:39:22.733Z"
 }]
 
+app.get('/', (req, res) => {
+  res.sendFile("client.html",{root : __dirname});
+})
+
 app.get('/items', (req, res) => {
   res.status(200).json(ITEMS)
 })
@@ -37,17 +41,31 @@ app.post('/item/', (req, res) => {
   res.status(201).json(req.body)
 })
 app.get('/item/:id', (req, res) => {
-   const one = ITEMS.filter((item) => item.id == req.params.id)
-  res.status(200).json(one);
+   //const getID = ITEMS.filter((item) => item.id == req.params.id)
+   const getID = req.params.id
+    if(ITEMS[getID]){
+      res.status(200).json(ITEMS[getID]);
+    }
+    else{
+      res.status(404).json({message :"ID NOT FOUND"})
+    }
 })
 
 app.delete('/item/:id', (req, res) => {
-  ITEMS = ITEMS.filter((item) => item.id != req.params.id)
-  res.status(204).json();
-  if(!ff){
-    console.log("${id} not found")
-    return res.status(404).json();
-  }
+  //ITEMS = ITEMS.filter((item) => item.id != req.params.id)
+  //res.status(204).json();
+  //if(!ff){
+    //console.log("${id} not found")
+    //return res.status(404).json();
+  //}
+    let del = req.params.id
+    if(ITEMS[del]){
+      delete ITEMS[del]
+      res.status(204).json();
+    }
+    else{
+      res.status(404).json({message :"ID NOT FOUND"});
+    }
 })
 
 app.listen(port, () => {

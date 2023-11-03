@@ -1,5 +1,5 @@
 FROM node
 WORKDIR /app/
-RUN npm install express --no-save && npm install cors
+RUN npm install express  cors
 COPY . .
 CMD ["node", "server.js"]
