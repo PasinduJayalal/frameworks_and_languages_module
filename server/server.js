@@ -23,7 +23,8 @@ let ITEMS=[{
 }]
 
 app.get('/', (req, res) => {
-  res.sendFile("client.html",{root : __dirname});
+  //res.sendFile("client.html",{root : __dirname});
+  res.status(200).sendFile("/workspaces/frameworks_and_languages_module/client/client.html");
 })
 
 app.get('/items', (req, res) => {

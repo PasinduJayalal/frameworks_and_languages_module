@@ -1,0 +1,91 @@
+<script type="importmap">
+{
+    "imports": {
+    "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+    }
+}
+</script>
+
+<div id="app">{{ message }}
+<form @submit.prevent="postForm">
+    <input v-model="items.user_id" name ="user_id" placeholder="Enter your User ID"/>
+    <input v-model="items.keywords" name ="keywords" placeholder="What Keywords"/>
+    <input v-model="items.description" name ="description" placeholder="Enter your Description"/>
+    <input v-model="items.lat" name ="lat" placeholder="Enter Lat"/>
+    <input v-model="items.lon" name ="lon" placeholder="Enter Lon"/>
+    <button>Add</button>
+    {{items.user_id}}{{items.keywords}}{{items.description}}{{items.lat}}{{items.lon}}
+</form>
+<ul>
+    <li v-for="item of list">
+        <span>{{item.id}}</span>
+        <span>{{item.user_id}}</span>
+        <span>{{item.keywords}}</span>
+        <span>{{item.description}}</span>
+        <span>{{item.lat}}</span>
+        <span>{{item.lon}}</span>
+        <button @click="deleteItems(item.id)">Delete</button>
+    </li>
+</ul>
+</div>
+
+<script type="module">
+import { createApp } from 'vue'
+
+createApp({
+    data() {
+    return {
+        message: 'Hello Vue!',
+        items :{ id :0, user_id:'', keywords: [], description :'', lat : '', lon : ''},
+        list :[],
+    }
+    },
+    created(){
+    this.clearForm()
+    this.getItems()
+    },
+    methods:{
+    clearForm(){
+        console.log("Clearing the forms")
+        this.items.id = Math.random()
+        this.items.user_id =''
+        this.items.keywords =''
+    },
+    postForm(){
+            console.log(this.items);
+            fetch(`/item`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(this.items),
+            })
+                .then(response => response.json())
+                .then(json => console.log('posted got back stuff', json))
+                .then(() => this.clearForm())
+                .then(() => this.getItems())
+            .catch(err => console.error(err));
+    },
+    getItems() {
+
+        fetch(`/items`, {
+            method: 'GET',
+        })
+            .then(response => response.json())
+            .then(json => {
+                console.log("GET WORKS !! YEAH", json)
+                this.list = json  
+            })
+        .catch(err => console.error(err))
+    },
+    deleteItems(id){
+        fetch(`/item/${id}`, {
+            method: 'DELETE',
+        })
+            .then(json => console.log('DELETED', json))
+            .then(() => this.getItems())
+        .catch(err => console.error(err));
+
+    },
+},
+    
+}).mount('#app')
+</script>
