@@ -3,9 +3,12 @@ const cors = require('cors')
 const app = express()
 const port = 8000
 
+// Middleware to parse JSON requests
 app.use(express.json())
+// Use CORS middleware
 app.use(cors())
 
+// Data storage (In-memory for demonstration purposes)
 let ITEMS=[{
   id: 0,
   user_id: "user1234",
@@ -22,32 +25,16 @@ let ITEMS=[{
   date_to: "2023-10-25T21:39:22.733Z"
 },]
 
+
 app.get('/', (req, res) => {
-  //res.sendFile("client.html",{root : __dirname});
   res.status(200).sendFile('/workspaces/frameworks_and_languages_module/client/client.html');
-  //res.status(404).json({ message: "Page Not Found" });
 })
 app.get('/items', (req, res) => {
   res.status(200).json(ITEMS)
 })
 
+// Create a new item
 app.post('/item', (req, res) => {
-  //if (Object.keys(req.body).toString() != "user_id,keywords,description,lat,lon") {
-    //return res.status(405).json({message: 'missing fields'})
-  //}
-  //else{
-  //const date = new Date().toISOString()
-  //const ID = Math.random();
-  //req.body['Date From'] = date
-  //req.body.id = ID
-  //req.body['id'] = ID
-
-  //ITEMS.push(req.body)
-  //return res.status(201).json(req.body)
-  //}
-  //if(!req.body.user_id || !req.body.keywords|| !req.body.description|| !req.body.lat|| !req.body.lon){
-    //return res.status(405).json({message: 'missing fields'})
-  //}
   if(Object.keys(req.body).toString() != "user_id,keywords,description,lat,lon"){
     return res.status(405).json({message: 'missing fields'})
   }
@@ -84,27 +71,9 @@ app.get('/item/:id', (req, res) => {
    if (!itemFound) {
       res.status(404).json({ message: "ID NOT FOUND" });
    }
-
-
-
-   //const getID = req.params.id
-   //for(const item of ITEMS){
-   // if(item.id == getID){
-    //  res.status(200).json(item);
-   // }
-    //else{
-     // res.status(404).json({message :"ID NOT FOUND"})
-    //}
-  //}
 })
 
 app.delete('/item/:id', (req, res) => {
-  //ITEMS = ITEMS.filter((item) => item.id != req.params.id)
-  //res.status(204).json();
-  //if(!ff){
-    //console.log("${id} not found")
-    //return res.status(404).json();
-  //}
   const del = req.params.id;
    let itemFound = false;
 
@@ -121,16 +90,6 @@ app.delete('/item/:id', (req, res) => {
    } else {
       res.status(404).json({ message: "ID is Not Found" });
    }
-    //let del = req.params.id
-    //for(const item of ITEMS){
-    //if(item.id == del){
-      //delete ITEMS[del]
-      //res.status(204).json();
-    //}
-    //else{
-      //res.status(404).json({message :"ID NOT FOUND"});
-    //}
-  //}
 })
 
 app.listen(port, () => {

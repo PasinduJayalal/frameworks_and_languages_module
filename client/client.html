@@ -1,3 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Store</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f4f4;
+        }
+        .header {
+            background-color: #343a40;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-container {
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+        .item-card {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
 <script type="importmap">
 {
     "imports": {
@@ -6,27 +42,42 @@
 }
 </script>
 
-<div id="app">{{ message }}
-<form @submit.prevent="postForm">
-    <input v-model="items.user_id" name ="user_id" placeholder="Enter your User ID"/>
-    <input v-model="items.keywords" name ="keywords" placeholder="What Keywords"/>
-    <input v-model="items.description" name ="description" placeholder="Enter your Description"/>
-    <input v-model="items.lat" name ="lat" placeholder="Enter Lat"/>
-    <input v-model="items.lon" name ="lon" placeholder="Enter Lon"/>
-    <button>Add</button>
-    {{items.user_id}}{{items.keywords}}{{items.description}}{{items.lat}}{{items.lon}}
-</form>
-<ul>
-    <li v-for="item of list">
-        <span>{{item.id}}</span>
-        <span>{{item.user_id}}</span>
-        <span>{{item.keywords}}</span>
-        <span>{{item.description}}</span>
-        <span>{{item.lat}}</span>
-        <span>{{item.lon}}</span>
-        <button @click="deleteItems(item.id)">Delete</button>
-    </li>
-</ul>
+<div id="app">
+    <div class="container">
+        <div class="header">
+            <h1>Item Store</h1>
+        </div>
+        <div class="form-container">
+            <form @submit.prevent="postForm">
+                <div class="form-group">
+                    <input class="form-control" v-model="items.user_id" placeholder="User ID"/>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" v-model="items.keywords" placeholder="Keywords"/>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" v-model="items.description" placeholder="Description"/>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" v-model="items.lat" placeholder="Latitude"/>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" v-model="items.lon" placeholder="Longitude"/>
+                </div>
+                <button class="btn btn-primary">Add</button>
+            </form>
+        </div>
+        <ul class="item-list">
+            <li class="item-card" v-for="item of itemsList">
+                <span>{{item.user_id}}</span>
+                <span>{{item.keywords}}</span>
+                <span>{{item.description}}</span>
+                <span>{{item.lat}}</span>
+                <span>{{item.lon}}</span>
+                <button class="btn btn-danger" @click="deleteItem(item.id)">Delete</button>
+            </li>
+        </ul>
+    </div>
 </div>
 
 <script type="module">
@@ -36,8 +87,14 @@ createApp({
     data() {
     return {
         message: 'Hello Vue!',
-        items :{ id :0, user_id:'', keywords: [], description :'', lat : '', lon : ''},
-        list :[],
+        items: {
+                user_id: '',
+                keywords: '',
+                description: '',
+                lat: '',
+                lon: ''
+            },
+        itemsList :[],
     }
     },
     created(){
@@ -47,9 +104,12 @@ createApp({
     methods:{
     clearForm(){
         console.log("Clearing the forms")
-        this.items.id = Math.random()
+        //this.items.id = Math.random()
         this.items.user_id =''
         this.items.keywords =''
+        this.items.description = ''
+        this.items.lat = ''
+        this.items.lon = ''
     },
     postForm(){
             console.log(this.items);
@@ -72,11 +132,11 @@ createApp({
             .then(response => response.json())
             .then(json => {
                 console.log("GET WORKS !! YEAH", json)
-                this.list = json  
+                this.itemsList = json  
             })
         .catch(err => console.error(err))
     },
-    deleteItems(id){
+    deleteItem(id){
         fetch(`/item/${id}`, {
             method: 'DELETE',
         })
@@ -89,3 +149,5 @@ createApp({
     
 }).mount('#app')
 </script>
+</body>
+</html>
