@@ -27,7 +27,8 @@ let ITEMS=[{
 
 
 app.get('/', (req, res) => {
-  res.status(200).sendFile('/workspaces/frameworks_and_languages_module/client/client.html');
+  //res.status(200).sendFile('/workspaces/frameworks_and_languages_module/client/client.html');
+  res.status(200).sendFile("client.html", {root: __dirname});
 })
 app.get('/items', (req, res) => {
   res.status(200).json(ITEMS)

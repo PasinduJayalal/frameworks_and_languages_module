@@ -82,6 +82,8 @@
 
 <script type="module">
 import { createApp } from 'vue'
+const urlParams = new URLSearchParams(window.location.search);
+const urlAPI = (urlParams.get('api') || DEFAULT_API).replace(/\/$/, '');
 
 createApp({
     data() {
@@ -112,8 +114,8 @@ createApp({
         this.items.lon = ''
     },
     postForm(){
-            console.log(this.items);
-            fetch(`/item`, {
+            //console.log(this.items);
+            fetch(`${urlAPI}/item`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(this.items),
@@ -126,7 +128,7 @@ createApp({
     },
     getItems() {
 
-        fetch(`/items`, {
+        fetch(`${urlAPI}/items`, {
             method: 'GET',
         })
             .then(response => response.json())
@@ -137,7 +139,7 @@ createApp({
         .catch(err => console.error(err))
     },
     deleteItem(id){
-        fetch(`/item/${id}`, {
+        fetch(`${urlAPI}/item/${id}`, {
             method: 'DELETE',
         })
             .then(json => console.log('DELETED', json))
