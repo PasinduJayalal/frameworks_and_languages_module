@@ -83,7 +83,7 @@
 <script type="module">
 import { createApp } from 'vue'
 const urlParams = new URLSearchParams(window.location.search);
-const urlAPI = (urlParams.get('api') || DEFAULT_API).replace(/\/$/, '');
+const urlAPI = (urlParams.get('api') || '').replace(/\/$/, '');
 
 createApp({
     data() {
