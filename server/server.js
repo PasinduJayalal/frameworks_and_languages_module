@@ -36,7 +36,10 @@ app.get('/items', (req, res) => {
 
 // Create a new item
 app.post('/item', (req, res) => {
-  if(Object.keys(req.body).toString() != "user_id,keywords,description,lat,lon"){
+  //if(Object.keys(req.body).toString() != "user_id,keywords,description,lat,lon"){
+    //return res.status(405).json({message: 'missing fields'})
+  //}
+  if(!req.body.user_id || !req.body.keywords || !req.body.description || !req.body.lat || !req.body.lon){
     return res.status(405).json({message: 'missing fields'})
   }
   else{
@@ -47,6 +50,7 @@ app.post('/item', (req, res) => {
       user_id : req.body.user_id,
       keywords : req.body.keywords,
       description : req.body.description,
+      image : req.body.image,
       lat : req.body.lat,
       lon : req.body.lon,
       date_from : dFrom,

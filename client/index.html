@@ -6,6 +6,13 @@
     <title>Item Store</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <nav class="navbar navbar-dark bg-primary">
+        <div class="container-fluid">
+          <a class="navbar-brand fs-1" >
+            Freecycle
+          </a>
+        </div>
+      </nav>
     <style>
         body {
             background-color: #f4f4f4;
@@ -50,31 +57,38 @@
         <div class="form-container">
             <form @submit.prevent="postForm">
                 <div class="form-group">
-                    <input class="form-control" v-model="items.user_id" placeholder="User ID"/>
+                    <input class="form-control" v-model="items.user_id" name="user_id" placeholder="User ID"/>
                 </div>
                 <div class="form-group">
-                    <input class="form-control" v-model="items.keywords" placeholder="Keywords"/>
+                    <input class="form-control" v-model="items.keywords" name="keywords" placeholder="Keywords"/>
                 </div>
                 <div class="form-group">
-                    <input class="form-control" v-model="items.description" placeholder="Description"/>
+                    <input class="form-control" v-model="items.description" name="description" placeholder="Description"/>
                 </div>
                 <div class="form-group">
-                    <input class="form-control" v-model="items.lat" placeholder="Latitude"/>
+                    <input class="form-control" v-model="items.image" name="image" placeholder="Image URL"/>
                 </div>
                 <div class="form-group">
-                    <input class="form-control" v-model="items.lon" placeholder="Longitude"/>
+                    <input class="form-control" v-model="items.lat" name="lat" placeholder="Latitude"/>
                 </div>
-                <button class="btn btn-primary">Add</button>
+                <div class="form-group">
+                    <input class="form-control" v-model="items.lon" name="lon" placeholder="Longitude"/>
+                </div>
+                <button class="btn btn-primary" data-action="create_item">Add</button>
             </form>
         </div>
         <ul class="item-list">
             <li class="item-card" v-for="item of itemsList">
-                <span>{{item.user_id}}</span>
-                <span>{{item.keywords}}</span>
-                <span>{{item.description}}</span>
-                <span>{{item.lat}}</span>
-                <span>{{item.lon}}</span>
-                <button class="btn btn-danger" @click="deleteItem(item.id)">Delete</button>
+                <img src="item.image" class="card-img-top">
+                <span data-field="id">ID: {{item.id}}</span>
+                <span data-field="user_id">User: {{item.user_id}}</span>
+                <span data-field="keywords">Keywords: {{item.keywords}}</span>
+                <span data-field="description">Description: {{item.description}}</span>
+                <span data-field="lat">Latitude: {{item.lat}}</span>
+                <span data-field="lon">Longitude: {{item.lon}}</span>
+                <span data-field="date_from">Date Form: {{item.date_from}}</span>
+                <span data-field="date_to">Date To: {{item.date_to}}</span>
+                <button class="btn btn-danger" data-action="delete" @click="deleteItem(item.id)">Delete</button>
             </li>
         </ul>
     </div>
@@ -83,7 +97,14 @@
 <script type="module">
 import { createApp } from 'vue'
 const urlParams = new URLSearchParams(window.location.search);
-const urlAPI = (urlParams.get('api') || '').replace(/\/$/, '');
+const urlAPI = (urlParams.get('api') || '/api/v1').replace(/\/$/, '');
+
+if (!urlAPI) 
+{
+    const missingItem = document.createElement('h2')
+    missingItem.textContent = "You need to connect the Client to Server "
+    document.body.append(missingItem)
+}
 
 createApp({
     data() {
@@ -93,6 +114,7 @@ createApp({
                 user_id: '',
                 keywords: '',
                 description: '',
+                image: '',
                 lat: '',
                 lon: ''
             },
@@ -110,6 +132,7 @@ createApp({
         this.items.user_id =''
         this.items.keywords =''
         this.items.description = ''
+        this.items.image =''
         this.items.lat = ''
         this.items.lon = ''
     },
