@@ -40,11 +40,12 @@ class getItems:
    def on_get(self, req, resp):
       """Handles GET requests"""
       resp.status = falcon.HTTP_200
-      resp.content_type = falcon.MEDIA_TEXT
+      #resp.content_type = falcon.MEDIA_TEXT
       resp.body = json.dumps(items)
 
 class postItems:
    def on_post(self, req, resp):
+      """Handles POST requests"""
       data = json.loads(req.bounded_stream.read())
       if 'user_id' not in data or 'keywords' not in data or 'description' not in data or 'lat' not in data or 'lon' not in data:
          resp.status = falcon.HTTP_405
@@ -64,13 +65,38 @@ class postItems:
                "date_form" : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             }
          ]
-         items.append(pitem)
+         items.extend(pitem)
          resp.status = falcon.HTTP_201
-         resp.content_type = falcon.MEDIA_TEXT
+         #resp.content_type = falcon.MEDIA_TEXT
+
+class getItemID:
+   def on_get(self, req, resp, id):
+      """Handles GET BY ID requests"""
+      itemFOUND = False
+      for item in items:
+         if item['id'] == int(id):
+            resp.status = falcon.HTTP_200
+            resp.body = json.dumps(item)
+            itemFOUND = True
+      if not itemFOUND:
+         resp.status = falcon.HTTP_404
+         resp.body = json.dumps({'message': 'ID NOT FOUND'})
+   def on_delete(self, req, resp, id):
+      """Handles DELETE BY ID requests"""
+      itemFOUND = False
+      for i, item in enumerate(items):
+         if item['id'] == int(id):
+            resp.status = falcon.HTTP_204
+            del items[i]
+            itemFOUND = True
+      if not itemFOUND:
+         resp.status = falcon.HTTP_404
+         resp.body = json.dumps({'message': 'ID NOT FOUND'})
 
 app.add_route('/', get())
 app.add_route('/items', getItems())
 app.add_route('/item', postItems())
+app.add_route('/item/{id}', getItemID())
 
 if __name__ == '__main__':
    with make_server('', 8000, app) as httpd:
