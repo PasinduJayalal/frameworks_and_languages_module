@@ -1,13 +1,20 @@
-from wsgiref.simple_server import make_server
-
 import falcon
 import json
 import random
 from datetime import datetime
 
+#app = falcon.App(cors_enable=True)
+#app = falcon.App(middleware=[falcon.CORSMiddleware(allow_origins='*', allow_methods='GET, POST, PUT, DELETE', allow_headers='Content-Type')])
 
-app = falcon.App()
+class CORSMiddleware:
+    def process_request(self, req, resp):
+      resp.set_header('Access-Control-Allow-Origin', '*')
+      resp.set_header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
+      resp.set_header('Access-Control-Allow-Headers', 'Content-Type')
+      resp.set_header('Access-Control-Max-Age', '1728000')  # 20 days
+      resp.status = falcon.HTTP_200
 
+app = falcon.App(middleware=[CORSMiddleware()])
 
 items = [
     {
@@ -32,21 +39,21 @@ class get:
    def on_get(self, req, resp):
       """Handles GET requests"""
       resp.status = falcon.HTTP_200
-      resp.content_type = falcon.MEDIA_TEXT
-      resp.text = (
-         'Hello World'
-      )
+      resp.content_type = 'text/html'
+      with open('index.html', 'r') as f:
+         resp.body = f.read()
+
 class getItems:
    def on_get(self, req, resp):
       """Handles GET requests"""
       resp.status = falcon.HTTP_200
-      #resp.content_type = falcon.MEDIA_TEXT
+      resp.content_type = falcon.MEDIA_JSON
       resp.body = json.dumps(items)
 
 class postItems:
    def on_post(self, req, resp):
       """Handles POST requests"""
-      data = json.loads(req.bounded_stream.read())
+      data = json.load(req.bounded_stream)
       if 'user_id' not in data or 'keywords' not in data or 'description' not in data or 'lat' not in data or 'lon' not in data:
          resp.status = falcon.HTTP_405
          resp.text = (
@@ -67,7 +74,7 @@ class postItems:
          ]
          items.extend(pitem)
          resp.status = falcon.HTTP_201
-         #resp.content_type = falcon.MEDIA_TEXT
+         #resp.content_type = falcon.MEDIA_JSON
 
 class getItemID:
    def on_get(self, req, resp, id):
@@ -76,11 +83,13 @@ class getItemID:
       for item in items:
          if item['id'] == int(id):
             resp.status = falcon.HTTP_200
+            resp.content_type = falcon.MEDIA_JSON
             resp.body = json.dumps(item)
             itemFOUND = True
       if not itemFOUND:
          resp.status = falcon.HTTP_404
          resp.body = json.dumps({'message': 'ID NOT FOUND'})
+
    def on_delete(self, req, resp, id):
       """Handles DELETE BY ID requests"""
       itemFOUND = False
@@ -99,6 +108,7 @@ app.add_route('/item', postItems())
 app.add_route('/item/{id}', getItemID())
 
 if __name__ == '__main__':
+   from wsgiref.simple_server import make_server
    with make_server('', 8000, app) as httpd:
       print('Serving on port 8000...')
 # Serve until process is killed
