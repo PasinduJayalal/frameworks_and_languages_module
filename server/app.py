@@ -2,17 +2,19 @@ import falcon
 import json
 import random
 from datetime import datetime
+from falcon.http_status import HTTPStatus
 
 #app = falcon.App(cors_enable=True)
 #app = falcon.App(middleware=[falcon.CORSMiddleware(allow_origins='*', allow_methods='GET, POST, PUT, DELETE', allow_headers='Content-Type')])
-
+#https://github.com/falconry/falcon/issues/1220#issuecomment-363266844
 class CORSMiddleware:
     def process_request(self, req, resp):
       resp.set_header('Access-Control-Allow-Origin', '*')
       resp.set_header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
       resp.set_header('Access-Control-Allow-Headers', 'Content-Type')
       resp.set_header('Access-Control-Max-Age', '1728000')  # 20 days
-      resp.status = falcon.HTTP_200
+      if req.method == 'OPTIONS':
+            raise HTTPStatus(falcon.HTTP_204, body='\n')
 
 app = falcon.App(middleware=[CORSMiddleware()])
 
@@ -48,7 +50,7 @@ class getItems:
       """Handles GET requests"""
       resp.status = falcon.HTTP_200
       resp.content_type = falcon.MEDIA_JSON
-      resp.body = json.dumps(items)
+      resp.media = items
 
 class postItems:
    def on_post(self, req, resp):
@@ -60,20 +62,19 @@ class postItems:
          'Missing Fields'
          )
       else:
-         pitem = [
-            {
-               "id" : random.randint(100, 999),
-               "user_id" : data['user_id'],
-               "keywords" : data['keywords'],
-               "description" : data['description'],
-               "lat" : data['lat'],
-               "lon" : data['lon'],
-               "date_from" : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-               "date_form" : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+         pitem = {
+            "id" : random.randint(100, 999),
+            "user_id" : data['user_id'],
+            "keywords" : data['keywords'],
+            "description" : data['description'],
+            "lat" : data['lat'],
+            "lon" : data['lon'],
+            "date_from" : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            "date_form" : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             }
-         ]
-         items.extend(pitem)
+         items.append(pitem)
          resp.status = falcon.HTTP_201
+         resp.media = pitem
          #resp.content_type = falcon.MEDIA_JSON
 
 class getItemID:
@@ -84,11 +85,11 @@ class getItemID:
          if item['id'] == int(id):
             resp.status = falcon.HTTP_200
             resp.content_type = falcon.MEDIA_JSON
-            resp.body = json.dumps(item)
+            resp.media = item
             itemFOUND = True
       if not itemFOUND:
          resp.status = falcon.HTTP_404
-         resp.body = json.dumps({'message': 'ID NOT FOUND'})
+         resp.media = 'ID NOT FOUND'
 
    def on_delete(self, req, resp, id):
       """Handles DELETE BY ID requests"""
@@ -96,11 +97,12 @@ class getItemID:
       for i, item in enumerate(items):
          if item['id'] == int(id):
             resp.status = falcon.HTTP_204
+            resp.media = 'ITEM DELETED'
             del items[i]
             itemFOUND = True
       if not itemFOUND:
          resp.status = falcon.HTTP_404
-         resp.body = json.dumps({'message': 'ID NOT FOUND'})
+         resp.media = 'ID NOT FOUND'
 
 app.add_route('/', get())
 app.add_route('/items', getItems())
