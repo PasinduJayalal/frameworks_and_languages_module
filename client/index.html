@@ -12,33 +12,7 @@
             Freecycle
           </a>
         </div>
-      </nav>
-    <style>
-        body {
-            background-color: #f4f4f4;
-        }
-        .header {
-            background-color: #343a40;
-            color: #ffffff;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .form-container {
-            padding: 20px;
-            margin-top: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #fff;
-        }
-        .item-card {
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #eee;
-            border-radius: 5px;
-            background-color: #fff;
-        }
-    </style>
+    </nav>
 </head>
 <body>
 <script type="importmap">
@@ -80,15 +54,17 @@
         <ul class="item-list">
             <li class="item-card" v-for="item of itemsList">
                 <img src="item.image" class="card-img-top">
-                <span data-field="id">ID: {{item.id}}</span>
-                <span data-field="user_id">User: {{item.user_id}}</span>
-                <span data-field="keywords">Keywords: {{item.keywords}}</span>
-                <span data-field="description">Description: {{item.description}}</span>
-                <span data-field="lat">Latitude: {{item.lat}}</span>
-                <span data-field="lon">Longitude: {{item.lon}}</span>
-                <span data-field="date_from">Date Form: {{item.date_from}}</span>
-                <span data-field="date_to">Date To: {{item.date_to}}</span>
-                <button class="btn btn-danger" data-action="delete" @click="deleteItem(item.id)">Delete</button>
+                <div>
+                    <span data-field="id">ID: {{item.id}}</span>
+                    <span data-field="user_id">User: {{item.user_id}}</span>
+                    <span data-field="keywords">Keywords: {{item.keywords}}</span>
+                    <span data-field="description">Description: {{item.description}}</span>
+                    <span data-field="lat">Latitude: {{item.lat}}</span>
+                    <span data-field="lon">Longitude: {{item.lon}}</span>
+                    <span data-field="date_from">Date Form: {{item.date_from}}</span>
+                    <span data-field="date_to">Date To: {{item.date_to}}</span>
+                    <button class="btn btn-danger" data-action="delete" @click="deleteItem(item.id)">Delete</button>
+                </div>
             </li>
         </ul>
     </div>
