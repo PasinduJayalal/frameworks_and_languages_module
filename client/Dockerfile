@@ -1,13 +1,11 @@
-FROM python:alpine
-#FROM nginx:alpine
+FROM node:alpine
 
 WORKDIR /app/
 
-EXPOSE 8001
-#VOLUME /logs
+COPY package.json .
+RUN npm install
 
-#COPY nginx.conf /etc/nginx/nginx.conf
-#COPY index.html /app/www/
+COPY . . 
 
-COPY index.html .
-CMD ["python3", "-m", "http.server", "8001"]
+ENV PORT=8001
+CMD ["npm", "start"]
