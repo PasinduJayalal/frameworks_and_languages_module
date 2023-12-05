@@ -4,7 +4,14 @@ import { useEffect } from "react";
 import { useState } from "react";
 
 export const Index = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlAPI = (urlParams.get('api') || '/api/v1').replace(/\/$/, '');
 
+  if (!urlAPI) {
+    const missingItem = document.createElement('h2')
+    missingItem.textContent = "You need to connect the Client to Server "
+    document.body.append(missingItem)
+  }
   const [items, setItems] = useState([]);
 
   const [values, setValues] = useState({
@@ -36,13 +43,18 @@ export const Index = () => {
     event.preventDefault();
     clearForm();
     //addItems();
-    console.log(values);
-    console.log(items);
-    axios.get('https://jsonplaceholder.typicode.com/posts')
-      .then(res => {setItems(res.data)})
+    //console.log(values);
+    //console.log(items);
+    axios.post('https://glorious-eureka-rvjjwxpgw5vf5wjq-8000.app.github.dev/item',values)
+      .then(res => console.log("Post successful ",{res}))
+      .then(() => displayitems())
       .catch(err => console.log(err));
   };
-
+  const displayitems = () => {
+    axios.get('https://glorious-eureka-rvjjwxpgw5vf5wjq-8000.app.github.dev/items')
+      .then(res => {setItems(res.data)})
+      .catch(err => console.log(err));
+  }
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -105,15 +117,15 @@ export const Index = () => {
             <img src={item.image}/>
             <div>
               <span data-field="id">ID: {item.id}</span>
-              <span data-field="user_id">User: {item.userId}</span>
-              <span data-field="keywords">Keywords: {item.title}</span>
+              <span data-field="user_id">User: {item.user_id}</span>
+              <span data-field="keywords">Keywords: {item.keywords}</span>
               <span data-field="description">
-                Description: {item.body}
+                Description: {item.description}
               </span>
-              {/* <span data-field="lat">Latitude: {item.lat}</span>
+              <span data-field="lat">Latitude: {item.lat}</span>
               <span data-field="lon">Longitude: {item.lon}</span>
               <span data-field="date_from">Date Form: {item.date_from}</span>
-              <span data-field="date_to">Date To: {item.date_to}</span> */}
+              <span data-field="date_to">Date To: {item.date_to}</span> 
               <button class="btn btn-danger" data-action="delete">
                 Delete
               </button>
