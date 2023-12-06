@@ -46,14 +46,23 @@ export const Index = () => {
     //console.log(values);
     //console.log(items);
     axios.post('https://glorious-eureka-rvjjwxpgw5vf5wjq-8000.app.github.dev/item',values)
-      .then(res => console.log("Post successful ",{res}))
-      .then(() => displayitems())
+      .then(res => {console.log("Post successful ",{res}); displayitems()})
       .catch(err => console.log(err));
   };
   const displayitems = () => {
     axios.get('https://glorious-eureka-rvjjwxpgw5vf5wjq-8000.app.github.dev/items')
       .then(res => {setItems(res.data)})
       .catch(err => console.log(err));
+  }
+  const deleteitems = (event) => {
+    axios.delete(`https://glorious-eureka-rvjjwxpgw5vf5wjq-8000.app.github.dev/item/${event.target.id}`)
+      .then(response => {
+        console.log(`Deleted post with ID ${event.target.id}`);
+        displayitems()
+      })
+      .catch(error => {
+        console.error(error);
+      });
   }
   return (
     <div>
@@ -126,13 +135,10 @@ export const Index = () => {
               <span data-field="lon">Longitude: {item.lon}</span>
               <span data-field="date_from">Date Form: {item.date_from}</span>
               <span data-field="date_to">Date To: {item.date_to}</span> 
-              <button class="btn btn-danger" data-action="delete">
+              <button className="btn btn-danger" data-action="delete" id={item.id} onClick={deleteitems} >
                 Delete
               </button>
             </div>
-
-            userId
-
           </li>
         </ul>
       ))}

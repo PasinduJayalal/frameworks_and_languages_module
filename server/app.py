@@ -4,8 +4,6 @@ import random
 from datetime import datetime
 from falcon.http_status import HTTPStatus
 
-#app = falcon.App(cors_enable=True)
-#app = falcon.App(middleware=[falcon.CORSMiddleware(allow_origins='*', allow_methods='GET, POST, PUT, DELETE', allow_headers='Content-Type')])
 #https://github.com/falconry/falcon/issues/1220#issuecomment-363266844
 class CORSMiddleware:
     def process_request(self, req, resp):
@@ -65,12 +63,13 @@ class postItems:
          pitem = {
             "id" : random.randint(100, 999),
             "user_id" : data['user_id'],
-            "keywords" : data['keywords'],
+            "keywords" : data['keywords'].split(','),
             "description" : data['description'],
+            "image" : data['image'],
             "lat" : data['lat'],
             "lon" : data['lon'],
             "date_from" : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            "date_form" : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            "date_to" : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             }
          items.append(pitem)
          resp.status = falcon.HTTP_201
