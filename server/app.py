@@ -40,7 +40,7 @@ items = [
     }
 ]
 
-# Resource for handling root endpoint
+# class for handling root endpoint
 class get:
    def on_get(self, req, resp):
       """Handles GET requests"""
@@ -49,7 +49,7 @@ class get:
       with open('index.html', 'r') as f:
          resp.body = f.read()
 
-# Resource for handling item collection endpoint
+# class for handling item collection endpoint
 class getItems:
    def on_get(self, req, resp):
       """Handles GET requests"""
@@ -57,15 +57,37 @@ class getItems:
       resp.content_type = falcon.MEDIA_JSON
       resp.media = items
 
-# Resource for handling item post endpoint
+# class for handling item post endpoint
 class postItems:
+   # def on_post(self, req, resp):
+   #  """Handles POST requests"""
+   #  data = json.load(req.bounded_stream)
+   #  if data['user_id'] and data['keywords'] and data['description'] and data['lat'] and data['lon']:
+   #      pitem = {
+   #          "id": random.randint(100, 999),
+   #          "user_id": data['user_id'],
+   #          "keywords": data['keywords'],
+   #          "description": data['description'],
+   #          "lat": data['lat'],
+   #          "lon": data['lon'],
+   #          "date_from": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+   #          "date_to": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+   #      }
+   #      items.append(pitem)
+   #      resp.status = falcon.HTTP_201
+   #      resp.media = pitem
+   #  else:
+   #      resp.status = falcon.HTTP_405
+   #      resp.media = {'error': 'Missing Fields'}
+         #resp.content_type = falcon.MEDIA_JSON
    def on_post(self, req, resp):
       """Handles POST requests"""
       data = json.load(req.bounded_stream)
-      required_fields = ["user_id", "keywords", "description", "lat", "lon"]
-      #if 'user_id' not in data or 'keywords' not in data or 'description' not in data or 'lat' not in data or 'lon' not in data:
+      #required_fields = ["user_id", "keywords", "description", "lat", "lon"]
+      if 'user_id' not in data or 'keywords' not in data or 'description' not in data or 'lat' not in data or 'lon' not in data:
       #if data.get("user_id") is None or data.get("keywords") is None or data.get("description") is None or data.get("lat") is None or data.get("lon") is None:
-      if not all(field in data for field in required_fields):
+      #if not all(field in data for field in required_fields):
+      #if data['user_id'] and data['keywords'] and data['description'] and data['lat'] and data['lon']:
          resp.status = falcon.HTTP_405
          resp.media = (
          'Missing Fields'
@@ -88,7 +110,7 @@ class postItems:
          resp.media = pitem
          #resp.content_type = falcon.MEDIA_JSON
 
-# Resource for handling individual item endpoint
+# class for handling individual get item endpoint
 class getItemID:
    def on_get(self, req, resp, id):
       """Handles GET BY ID requests"""
@@ -103,6 +125,7 @@ class getItemID:
          resp.status = falcon.HTTP_404
          resp.media = 'ID NOT FOUND'
 
+# class for handling individual delete item endpoint
    def on_delete(self, req, resp, id):
       """Handles DELETE BY ID requests"""
       itemFOUND = False
@@ -116,6 +139,7 @@ class getItemID:
          resp.status = falcon.HTTP_404
          resp.media = 'ID NOT FOUND'
 
+# Add routes
 app.add_route('/', get())
 app.add_route('/items', getItems())
 app.add_route('/item', postItems())

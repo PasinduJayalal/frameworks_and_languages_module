@@ -1,10 +1,14 @@
 import Index from "./scenes/items";
-
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
 function App() {
   return (
     <div className="App">
-      < Index/>
+      <Router>
+        <Routes>
+          <Route path="" element={<Index />} />
+        </Routes>
+      </Router>
     </div>
   );
 }

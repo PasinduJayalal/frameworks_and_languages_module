@@ -1,17 +1,20 @@
 import React from "react";
 import axios from "axios";
 import { useState } from "react";
-
+import { useLocation } from "react-router-dom";
 
 export const Index = () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const urlAPI = (urlParams.get('api') || '/api/v1').replace(/\/$/, '');
+  // const urlParams = new URLSearchParams(window.location.search);
+  // const urlAPI = (urlParams.get('api') || '/api/v1').replace(/\/$/, '');
 
-  if (!urlAPI) {
-    const missingItem = document.createElement('h2')
-    missingItem.textContent = "You need to connect the Client to Server "
-    document.body.append(missingItem)
-  }
+  // if (!urlAPI) {
+  //   const missingItem = document.createElement('h2')
+  //   missingItem.textContent = "You need to connect the Client to Server "
+  //   document.body.append(missingItem)
+  // }
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const api = (params.get('api')|| '/api/v1').replace(/\/$/, '');
   const [items, setItems] = useState([]);
 
   const [values, setValues] = useState({
@@ -37,25 +40,44 @@ export const Index = () => {
       const item = document.getElementById(field);
       item.value = "";
     }
+    const newvalues = {
+      user_id: "",
+      keywords: "",
+      description: "",
+      image: "",
+      lat: "",
+      lon: "",
+    }
+    setValues(newvalues)
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    clearForm();
+    const isAnyValueEmpty = Object.values(values).every(
+      (value) => value !== ""
+    );
+
+    if (!isAnyValueEmpty) {
+      alert(" Some fields are empty");
+    } else {
+      clearForm();
+    // console.log(api)
     //addItems();
     //console.log(values);
     //console.log(items);
-    axios.post('https://glorious-eureka-rvjjwxpgw5vf5wjq-8000.app.github.dev/item',values)
+    // console.log(api+'/item')
+    axios.post(api+'/item',values)
       .then(res => {console.log("Post successful ",{res}); displayitems()})
       .catch(err => console.log(err));
+    }
   };
   const displayitems = () => {
-    axios.get('https://glorious-eureka-rvjjwxpgw5vf5wjq-8000.app.github.dev/items')
+    axios.get(api+'/items')
       .then(res => {setItems(res.data)})
       .catch(err => console.log(err));
   }
   const deleteitems = (event) => {
-    axios.delete(`https://glorious-eureka-rvjjwxpgw5vf5wjq-8000.app.github.dev/item/${event.target.id}`)
+    axios.delete(api+`/item/${event.target.id}`)
       .then(response => {
         console.log(`Deleted post with ID ${event.target.id}`);
         displayitems()
