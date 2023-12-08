@@ -1,9 +1,13 @@
+# Importing necessary modules
 import falcon
 import json
 import random
 from datetime import datetime
 from falcon.http_status import HTTPStatus
 
+
+# Middleware for handling CORS
+# Using the URL below, I have written the code for "CORS Middleware" here.
 #https://github.com/falconry/falcon/issues/1220#issuecomment-363266844
 class CORSMiddleware:
     def process_request(self, req, resp):
@@ -12,10 +16,12 @@ class CORSMiddleware:
       resp.set_header('Access-Control-Allow-Headers', 'Content-Type')
       resp.set_header('Access-Control-Max-Age', '1728000')  # 20 days
       if req.method == 'OPTIONS':
-            raise HTTPStatus(falcon.HTTP_204, body='\n')
+            raise HTTPStatus(falcon.HTTP_204, body='\n') #I have to modify the "OPTIONS" to return 204 status code as it returns 200 by default. 
 
+# Falcon application setup
 app = falcon.App(middleware=[CORSMiddleware()])
 
+# Sample item data
 items = [
     {
         "id": 0,
@@ -34,7 +40,7 @@ items = [
     }
 ]
 
-
+# Resource for handling root endpoint
 class get:
    def on_get(self, req, resp):
       """Handles GET requests"""
@@ -43,6 +49,7 @@ class get:
       with open('index.html', 'r') as f:
          resp.body = f.read()
 
+# Resource for handling item collection endpoint
 class getItems:
    def on_get(self, req, resp):
       """Handles GET requests"""
@@ -50,6 +57,7 @@ class getItems:
       resp.content_type = falcon.MEDIA_JSON
       resp.media = items
 
+# Resource for handling item post endpoint
 class postItems:
    def on_post(self, req, resp):
       """Handles POST requests"""
@@ -80,6 +88,7 @@ class postItems:
          resp.media = pitem
          #resp.content_type = falcon.MEDIA_JSON
 
+# Resource for handling individual item endpoint
 class getItemID:
    def on_get(self, req, resp, id):
       """Handles GET BY ID requests"""
