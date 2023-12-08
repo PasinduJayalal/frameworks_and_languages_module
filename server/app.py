@@ -54,18 +54,22 @@ class postItems:
    def on_post(self, req, resp):
       """Handles POST requests"""
       data = json.load(req.bounded_stream)
-      if 'user_id' not in data or 'keywords' not in data or 'description' not in data or 'lat' not in data or 'lon' not in data:
+      required_fields = ["user_id", "keywords", "description", "lat", "lon"]
+      #if 'user_id' not in data or 'keywords' not in data or 'description' not in data or 'lat' not in data or 'lon' not in data:
+      #if data.get("user_id") is None or data.get("keywords") is None or data.get("description") is None or data.get("lat") is None or data.get("lon") is None:
+      if not all(field in data for field in required_fields):
          resp.status = falcon.HTTP_405
-         resp.text = (
+         resp.media = (
          'Missing Fields'
          )
       else:
          pitem = {
             "id" : random.randint(100, 999),
+            #"id" : len(items)+1,
             "user_id" : data['user_id'],
-            "keywords" : data['keywords'].split(','),
+            "keywords" : data['keywords'],
             "description" : data['description'],
-            "image" : data['image'],
+            #"image" : data['image'],
             "lat" : data['lat'],
             "lon" : data['lon'],
             "date_from" : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),

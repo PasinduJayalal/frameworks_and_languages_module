@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
-import { useEffect } from "react";
 import { useState } from "react";
+
 
 export const Index = () => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -115,7 +115,7 @@ export const Index = () => {
             onChange={handleInput}
           />
         </div>
-        <button type="submit">Add</button>
+        <button type="submit" data-action="create_item">Add</button>
       </form>
       <br></br>
       <br></br>
@@ -123,7 +123,7 @@ export const Index = () => {
       {items.map((item, index) => (
         <ul key={index}>
           <li key={index}>
-            <img src={item.image}/>
+            <img src={item.image} alt={item.id}/>
             <div>
               <span data-field="id">ID: {item.id}</span>
               <span data-field="user_id">User: {item.user_id}</span>
