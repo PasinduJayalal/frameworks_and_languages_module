@@ -93,13 +93,14 @@ class postItems:
          'Missing Fields'
          )
       else:
+         #print(data['image'])
          pitem = {
-            "id" : random.randint(100, 999),
-            #"id" : len(items)+1,
+            #"id" : random.randint(100, 999),
+            "id" : len(items)+1,
             "user_id" : data['user_id'],
             "keywords" : data['keywords'],
             "description" : data['description'],
-            #"image" : data['image'],
+            "image" : "https://placekitten.com/200/287",
             "lat" : data['lat'],
             "lon" : data['lon'],
             "date_from" : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
