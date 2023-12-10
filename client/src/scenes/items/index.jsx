@@ -1,16 +1,14 @@
 import axios from "axios";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
+//References 
+//https://react.dev/learn/start-a-new-react-project
+//https://legacy.reactjs.org/docs/lists-and-keys.html
+//https://www.w3schools.com/react/react_router.asp
+//https://youtu.be/42qFJ67E-ws?si=GF577ZLtydQXof2o
+//https://youtu.be/F53MPHqOmYI?si=Q3Rmac0EKP4Tx8OS
 
 export const Index = () => {
-  // const urlParams = new URLSearchParams(window.location.search);
-  // const urlAPI = (urlParams.get('api') || '/api/v1').replace(/\/$/, '');
-
-  // if (!urlAPI) {
-  //   const missingItem = document.createElement('h2')
-  //   missingItem.textContent = "You need to connect the Client to Server "
-  //   document.body.append(missingItem)
-  // }
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const api = (params.get("api") || "/api/v1").replace(/\/$/, "");
@@ -29,10 +27,7 @@ export const Index = () => {
     setValues((prev) => ({ ...prev, [event.target.name]: event.target.value }));
   };
 
-  // const addItems = () => {
-  //   setItems((prevItems) => [...prevItems, values]);
-  // };
-
+  // Clear the form data
   const clearForm = () => {
     const fields = Object.keys(values);
     for (const field of fields) {
@@ -51,21 +46,18 @@ export const Index = () => {
   };
 
   const handleSubmit = (event) => {
-    event.preventDefault();
+    event.preventDefault(); //Stop the website from refreshing each time when the submit button is clicked.
+
     const isAnyValueEmpty = Object.entries(values).every(
       ([key, value]) => key === "image" || value !== ""
-    );
+    ); //Verify whether any of the essential fields are empty except image field. 
 
     if (!isAnyValueEmpty) {
       alert(" Some fields are empty");
     } else {
-      clearForm();
-      // console.log(api)
-      //addItems();
-      //console.log(values);
-      //console.log(items);
-      // console.log(api+'/item')
+      clearForm(); // Function to clear the form
       values.keywords = values.keywords.split(",");
+      // Make a POST request to add the new item to the server
       axios
         .post(api + "/item", values)
         .then((res) => {
@@ -76,6 +68,7 @@ export const Index = () => {
     }
   };
   const displayitems = () => {
+    // Make a GET request to get items from the server
     axios
       .get(api + "/items")
       .then((res) => {
@@ -84,6 +77,7 @@ export const Index = () => {
       .catch((err) => console.log(err));
   };
   const deleteitems = (event) => {
+    // Make a DELETE request to remove the item from the server
     axios
       .delete(api + `/item/${event.target.id}`)
       .then((response) => {
@@ -162,72 +156,6 @@ export const Index = () => {
       </form>
       <br></br>
       <br></br>
-
-      {/* {items.map((item, index) => (
-        <ul key={index}>
-          <li key={index}>
-            <img src={item.image} alt={item.id} />
-            <div>
-              <span data-field="id">ID: {item.id}</span>
-              <span data-field="user_id">User: {item.user_id}</span>
-              <span data-field="keywords">
-                Keywords: {JSON.stringify(item.keywords)}
-              </span>
-              <span data-field="description">
-                Description: {item.description}
-              </span>
-              <span data-field="lat">Latitude: {item.lat}</span>
-              <span data-field="lon">Longitude: {item.lon}</span>
-              <span data-field="date_from">Date Form: {item.date_from}</span>
-              <span data-field="date_to">Date To: {item.date_to}</span>
-              <button
-                className="btn btn-danger"
-                data-action="delete"
-                id={item.id}
-                onClick={deleteitems}
-              >
-                Delete
-              </button>
-            </div>
-            <div key={index}>
-              <div className="group relative">
-                <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
-                  <img
-                    src={item.image}
-                    alt={item.description}
-                    className="h-full w-full object-cover object-center lg:h-full lg:w-full"
-                  />
-                </div>
-                <div className="mt-4 flex justify-between">
-                  <div>
-                    <h3 className="text-sm text-gray-700">
-                      {item.description}
-                    </h3>
-                    <p className="text-sm font-medium text-gray-900">
-                      key words : {item.keywords}
-                    </p>
-                    <p className="mt-1 text-sm text-gray-500 ">
-                      Longitude : {item.lat}
-                    </p>
-                    <p className="mt-1 text-sm text-gray-500 ">
-                      Longitude : {item.lon}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="flex justify-end">
-                <button
-                  onClick={deleteitems}
-                  className="mt-2 p-2 text-sm text-red-500 hover:text-red-700 focus:outline-none"
-                  id={index}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          </li>
-        </ul>
-      ))} */}
       <div className="bg-white">
         <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
           <h2 className="text-2xl font-bold tracking-tight text-gray-900">

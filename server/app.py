@@ -37,7 +37,7 @@ items = [
         "lon": 1.0830275,
         "date_from": "2023-10-25T21:39:22.733Z",
         "date_to": "2023-10-25T21:39:22.733Z"
-    }
+    },
 ]
 
 # class for handling root endpoint
@@ -55,36 +55,15 @@ class getItems:
       """Handles GET requests"""
       resp.status = falcon.HTTP_200
       resp.content_type = falcon.MEDIA_JSON
-      resp.media = items
+      resp.media = items # Returning data from items list
 
 # class for handling item post endpoint
 class postItems:
-   # def on_post(self, req, resp):
-   #  """Handles POST requests"""
-   #  data = json.load(req.bounded_stream)
-   #  if data['user_id'] and data['keywords'] and data['description'] and data['lat'] and data['lon']:
-   #      pitem = {
-   #          "id": random.randint(100, 999),
-   #          "user_id": data['user_id'],
-   #          "keywords": data['keywords'],
-   #          "description": data['description'],
-   #          "lat": data['lat'],
-   #          "lon": data['lon'],
-   #          "date_from": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-   #          "date_to": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-   #      }
-   #      items.append(pitem)
-   #      resp.status = falcon.HTTP_201
-   #      resp.media = pitem
-   #  else:
-   #      resp.status = falcon.HTTP_405
-   #      resp.media = {'error': 'Missing Fields'}
-         #resp.content_type = falcon.MEDIA_JSON
    def on_post(self, req, resp):
       """Handles POST requests"""
       data = json.load(req.bounded_stream)
       #required_fields = ["user_id", "keywords", "description", "lat", "lon"]
-      if 'user_id' not in data or 'keywords' not in data or 'description' not in data or 'lat' not in data or 'lon' not in data:
+      if 'user_id' not in data or 'keywords' not in data or 'description' not in data or 'lat' not in data or 'lon' not in data: #https://codedamn.com/news/python/how-to-check-if-an-item-is-in-a-list
       #if data.get("user_id") is None or data.get("keywords") is None or data.get("description") is None or data.get("lat") is None or data.get("lon") is None:
       #if not all(field in data for field in required_fields):
       #if data['user_id'] and data['keywords'] and data['description'] and data['lat'] and data['lon']:
@@ -95,18 +74,18 @@ class postItems:
       else:
          #print(data['image'])
          pitem = {
-            #"id" : random.randint(100, 999),
-            "id" : len(items)+1,
+            "id" : random.randint(100, 999), #https://www.w3schools.com/python/ref_random_randint.asp
+            #"id" : len(items)+1,
             "user_id" : data['user_id'],
             "keywords" : data['keywords'],
             "description" : data['description'],
             "image" : "https://placekitten.com/200/287",
             "lat" : data['lat'],
             "lon" : data['lon'],
-            "date_from" : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            "date_to" : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            "date_from" : datetime.now().strftime('%Y-%m-%d %H:%M:%S'), #https://www.w3schools.com/python/python_datetime.asp
+            "date_to" : datetime.now().strftime('%Y-%m-%d %H:%M:%S'), #https://www.geeksforgeeks.org/how-to-convert-datetime-to-date-in-python/
             }
-         items.append(pitem)
+         items.append(pitem) #https://www.digitalocean.com/community/tutorials/python-add-to-list
          resp.status = falcon.HTTP_201
          resp.media = pitem
          #resp.content_type = falcon.MEDIA_JSON
@@ -116,8 +95,9 @@ class getItemID:
    def on_get(self, req, resp, id):
       """Handles GET BY ID requests"""
       itemFOUND = False
-      for item in items:
-         if item['id'] == int(id):
+      for item in items: #https://www.w3schools.com/python/python_for_loops.asp
+      # https://www.geeksforgeeks.org/check-if-element-exists-in-list-in-python/
+         if item['id'] == int(id): # It produces a string by default, therefore I have to convert it to an integer to compare the ids
             resp.status = falcon.HTTP_200
             resp.content_type = falcon.MEDIA_JSON
             resp.media = item
@@ -130,21 +110,25 @@ class getItemID:
    def on_delete(self, req, resp, id):
       """Handles DELETE BY ID requests"""
       itemFOUND = False
-      for i, item in enumerate(items):
-         if item['id'] == int(id):
+      # I obtained both a counter and the value from the iterable simultaneously by using Python's enumerate() function
+      #https://stackoverflow.com/questions/36244380/enumerate-for-dictionary-in-python
+      for i, item in enumerate(items): 
+         if item['id'] == int(id): # It produces a string by default, therefore I have to convert it to an integer to compare the ids.
             resp.status = falcon.HTTP_204
             resp.media = 'ITEM DELETED'
-            del items[i]
+            del items[i] #https://note.nkmk.me/en/python-list-clear-pop-remove-del/
             itemFOUND = True
       if not itemFOUND:
          resp.status = falcon.HTTP_404
          resp.media = 'ID NOT FOUND'
 
 # Add routes
+#https://www.tutorialspoint.com/python_falcon/python_falcon_routing.htm
 app.add_route('/', get())
 app.add_route('/items', getItems())
 app.add_route('/item', postItems())
 app.add_route('/item/{id}', getItemID())
+
 
 if __name__ == '__main__':
    from wsgiref.simple_server import make_server
