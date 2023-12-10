@@ -37,7 +37,7 @@ items = [
         "lon": 1.0830275,
         "date_from": "2023-10-25T21:39:22.733Z",
         "date_to": "2023-10-25T21:39:22.733Z"
-    },
+    }
 ]
 
 # class for handling root endpoint
@@ -72,7 +72,6 @@ class postItems:
          'Missing Fields'
          )
       else:
-         #print(data['image'])
          pitem = {
             "id" : random.randint(100, 999), #https://www.w3schools.com/python/ref_random_randint.asp
             #"id" : len(items)+1,
