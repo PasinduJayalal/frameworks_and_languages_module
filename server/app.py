@@ -78,7 +78,7 @@ class postItems:
             "user_id" : data['user_id'],
             "keywords" : data['keywords'],
             "description" : data['description'],
-            "image" : "https://placekitten.com/200/287",
+            "image" : data.get('image'),
             "lat" : data['lat'],
             "lon" : data['lon'],
             "date_from" : datetime.now().strftime('%Y-%m-%d %H:%M:%S'), #https://www.w3schools.com/python/python_datetime.asp
