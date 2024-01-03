@@ -1,14 +1,19 @@
 Technical Report
 ================
 
-(intro describing purpose of report - 200ish words)
+## Introduction 
 
+This series examines the new age of web development, focusing on the key role played by programming frameworks and languages in determining whether a software project succeeds or fails. This technical report will delve into the world of web development and take a look at ways to improve on prototypes of Freecycle-Inc's existing FreeCycle platform. Working as a Software Engineer on this quest, I looked into and tried various frameworks and languages such as React, Falcon.
+Standing at the center of modern web development is React, a JavaScript library for building user interfaces. Its component-based architecture, virtual DOM and unidirectional data flow give developers a very powerful means of building dynamic and reactive applications. The report will examine how well suited React is to the FreeCycle platform and explain its pluses and minuses.
+The server-side of our project is provided simplicity and speed by the minimalist Python web framework Falcon. In this way, the requirements for ease of use and performance accord well with Falcon's needs. This report will evaluate how well Falcon has been supporting the backend infrastructure of FreeCycle.
+Tailwind CSS, a utility-based approach to frontend design. Its utility classes make for rapid prototyping and simplified maintenance. This report will examine how Tailwind CSS helps with the graphics front of FreeCycle, looking at its effect on design uniformity and developer convenience.
+As this make the way through the subtleties of each one, this report intends to give a broad overview--outlining some features and advantages but also perhaps pointing out possible downsides. In this way it is possible to establish a basis for rational decision making in developing the existing prototype into a complete industrial commodity.
 
 Critique of Server/Client prototype
 ---------------------
 
-### Overview
-()
+### Critique of Framework-less Prototype
+An evaluation of the existing versions of both server and client prototypes reveals inherent limitations affecting scalability, maintainability, and overall robustness. The ensuing critique dissects server-side and client-side prototypes separately, providing code samples that highlight shortcomings.
 
 ### (name of Issue 1)
 
