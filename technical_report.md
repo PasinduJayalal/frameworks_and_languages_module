@@ -11,20 +11,77 @@ As this make the way through the subtleties of each one, this report intends to 
 
 Critique of Server/Client prototype
 ---------------------
-
-### Critique of Framework-less Prototype
 An evaluation of the existing versions of both server and client prototypes reveals inherent limitations affecting scalability, maintainability, and overall robustness. The ensuing critique dissects server-side and client-side prototypes separately, providing code samples that highlight shortcomings.
 
-### (name of Issue 1)
+## Server Prototype Critique:
 
-(A code snippet example demonstrating the issue)
-(Explain why this pattern is problematic - 40ish words)
+### Lack of Structure:
+The server prototype, located in the "./example_server/" directory, lacks a framework to organize routing, middleware, and request handling. This absence makes it challenging for future enhancements, resulting in manual implementation of common functionalities, leading to verbose and error-prone code.
 
-### (name of Issue 2)
+#### Incomplete Routes:
+Server-side code calls functions like get_index without providing implementations, resulting in a server missing crucial components.
+```
+ROUTES = (
+    ('OPTIONS', r'.*', options_response),
+    ('GET', r'/$', get_index),
+    ('POST', r'/item$', post_item),
+    ('GET', r'/item/(?P<id>\d+)$', get_item),
+    ('DELETE', r'/item/(?P<id>\d+)$', delete_item),
+    ('GET', r'/items$', get_items),
+)
+```
+#### Limited Middleware:
+Lack of middleware for common tasks results in redundant code across different routes.
+```
+def options_response(request):
+    """
+    >>> options_response({'path': '*', 'method': 'OPTIONS'})
+    {'code': 204, 'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, DELETE', 'Access-Control-Allow-Headers': 'Content-Type'}
 
-(A code snippet example demonstrating the issue)
-(Explain why this pattern is problematic - 40ish words)
+    https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/OPTIONS
+    Pre-Flight Options for use with real browsers
+    """
+    return {
+        'code': 204,
+        'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, DELETE',
+        'Access-Control-Allow-Headers': 'Content-Type',
+    }
+    ('OPTIONS', r'.*', options_response)
+```
+## Client-Side Critique:
 
+### Lack of Modularity:
+The entire client-side code, encapsulated in a single script tag, hinders modularity and maintenance.
+```
+<script type="module">
+// ... entire client-side code ...
+</script>
+```
+### Duplicate IDs:
+Usage of identical IDs for some elements results in bad HTML and potential unexpected effects.
+
+```
+<form>
+	<label for="create_user_id">Username</label><input id="create_user_id" type="text" name="user_id"/>
+	<label for="create_lat">lat</label><input id="create_lat" type="text" name="lat"/>
+	<label for="create_lon">lon</label><input id="create_lon" type="text" name="lon"/>
+	<label for="create_image">image</label><input id="create_image" type="text" name="image" value="http://placekitten.com/100/100"/>
+	<label for="create_keywords">keywords</label><input id="create_keywords" type="text" name="keywords"/>
+	<label for="create_description">description</label><textarea id="create_description" type="text" name="description"></textarea>
+	<input type="submit" id="action_create" data-action="create_item">
+</form>
+
+<form>
+	<label for="create_postcode">Postcode</label><input id="create_postcode" type="text" name="postcode"/>
+	<button data-action="lookup_postcode">Lookup</button>
+	<label for="create_lat">lat</label><input id="create_lat" type="text" name="lat"/>
+	<label for="create_lon">lon</label><input id="create_lon" type="text" name="lon"/>
+	<label for="create_image">image</label><input id="create_image" type="text" name="image" value="http://placekitten.com/100/100"/>
+	<label for="create_keywords">keywords</label><input id="create_keywords" type="text" name="keywords"/>
+	<label for="create_description">description</label><textarea id="create_description" type="text" name="description"></textarea>
+	<input type="submit" id="action_create" data-action="create_item">
+</form>
+```
 ### Recommendation
 (why the existing implementation should not be used - 40ish words)
 (suggested direction - frameworks 40ish words)
