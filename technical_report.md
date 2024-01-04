@@ -3,11 +3,11 @@ Technical Report
 
 ## Introduction 
 
-This series examines the new age of web development, focusing on the key role played by programming frameworks and languages in determining whether a software project succeeds or fails. This technical report will delve into the world of web development and take a look at ways to improve on prototypes of Freecycle-Inc's existing FreeCycle platform. Working as a Software Engineer on this quest, I looked into and tried various frameworks and languages such as React, Falcon.
+This technical report will delve into the world of web development and take a look at ways to improve on prototypes of Freecycle-Inc's existing FreeCycle platform. The report will outline the advantages of ReactJS (Client-Side framework) and Falcon (Server-Side framework).
 Standing at the center of modern web development is React, a JavaScript library for building user interfaces. Its component-based architecture, virtual DOM and unidirectional data flow give developers a very powerful means of building dynamic and reactive applications. The report will examine how well suited React is to the FreeCycle platform and explain its pluses and minuses.
 The server-side of our project is provided simplicity and speed by the minimalist Python web framework Falcon. In this way, the requirements for ease of use and performance accord well with Falcon's needs. This report will evaluate how well Falcon has been supporting the backend infrastructure of FreeCycle.
 Tailwind CSS, a utility-based approach to frontend design. Its utility classes make for rapid prototyping and simplified maintenance. This report will examine how Tailwind CSS helps with the graphics front of FreeCycle, looking at its effect on design uniformity and developer convenience.
-As this make the way through the subtleties of each one, this report intends to give a broad overview--outlining some features and advantages but also perhaps pointing out possible downsides. In this way it is possible to establish a basis for rational decision making in developing the existing prototype into a complete industrial commodity.
+As this make the way through the subtleties of each one, this report intends to give a broad overview--outlining some features and advantages but also pointing out possible downsides of the current frameless prototype (without frameworks) should not be used as the foundation for future enhancements. In this way it is possible to establish a basis for rational decision making in developing the existing prototype into a complete industrial commodity.
 
 Critique of Server/Client prototype
 ---------------------
@@ -82,9 +82,11 @@ Usage of identical IDs for some elements results in bad HTML and potential unexp
 	<input type="submit" id="action_create" data-action="create_item">
 </form>
 ```
-### Recommendation
-(why the existing implementation should not be used - 40ish words)
-(suggested direction - frameworks 40ish words)
+## Server-Side Recommendation:
+The server design model requires routes and structure, a robust system framework such as Falcon is required. Falcon is a server-side framework that ensures it can grow large and be maintained with ease. The server will be more robust and secure when Falcon's middleware and error handling are used.
+
+## Client-Side Recommendation:
+To address issues with how components are structured and created in code for websites, it is suggested to use a front-end solution like ReactJS. The framework of React allows it to be easier to build the components one at a time. The use of separate style files (JSX, JS and etc..) simplifies the task of maintaining the project clean and neat. This change not only improves the organisational structure of the code, but it also prepares for a more extensive and rapid client-side project.
 
 
 Server Framework Features
