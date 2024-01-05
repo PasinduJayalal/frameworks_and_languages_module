@@ -171,31 +171,106 @@ Server Language Features
 
 
 
-Client Framework Features
+ReactJS Client Framework Features
 -------------------------
 
-### (name of Feature 1)
+### Component-Based Architecture
+React's component creation method allows developers to break up large, complex user interfaces into more manageable pieces. An example of this can be seen in the App.js where the index.jsx component is imported and used. Every component looks after its look, actions, and state. This keeps the code organised and facilitates future problem-solving and reusability.
+```
+import Index from "./scenes/items";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
-(Technical description of the feature - 40ish words)
-(A code block snippet example demonstrating the feature)
-(Explain the problem-this-is-solving/why/benefits/problems - 40ish words)
-(Provide reference urls to your sources of information about the feature - required)
+function App() {
+  return (
+    <div className="App">
+      <nav>
+        <div className="relative isolate  items-center gap-x-6 overflow-hidden bg-blue-500 px-6 py-2.5 sm:px-3.5 sm:before:flex-1">
+          <a href="https://editor.swagger.io/" className="font-semibold">Freecycle</a>
+        </div>
+      </nav>
+      <Router>
+        <Routes>
+          <Route path="" element={<Index />} />
+        </Routes>
+      </Router>
+    </div>
+  );
+}
 
+export default App;
+```
+* https://github.com/PasinduJayalal/frameworks_and_languages_module/blob/7f6fc64dd8d58c6a7e75b4688bf17b3c263a814d/client/src/App.js#L1
 
-### (name of Feature 2)
+Modularity: The programme can be made simpler and more efficient to maintain by using components like index.jsx in different areas.Isolation: Each component manages its own task, reducing unanticipated conflicts with other components of the programme.Reusability: Components can be easily reused into other projects or even various sections of the programme.
 
-(Technical description of the feature - 40ish words)
-(A code block snippet example demonstrating the feature)
-(Explain the problem-this-is-solving/why/benefits/problems - 40ish words)
-(Provide reference urls to your sources of information about the feature - required)
+* https://www.codingninjas.com/studio/library/features-of-react-js
+* https://legacy.reactjs.org/docs/components-and-props.html
 
+### Using React Router for Simple Web Navigation
 
-### (name of Feature 3)
+React Router is used for user-side routing, which is a fundamental component required to create single-page web applications. It enables the use of URL modifications to switch between different views and sections without requiring a full page refresh.
+```
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
-(Technical description of the feature - 40ish words)
-(A code block snippet example demonstrating the feature)
-(Explain the problem-this-is-solving/why/benefits/problems - 40ish words)
-(Provide reference urls to your sources of information about the feature - required)
+function App() {
+  return (
+    <div className="App">
+      <nav>
+        <div className="relative isolate  items-center gap-x-6 overflow-hidden bg-blue-500 px-6 py-2.5 sm:px-3.5 sm:before:flex-1">
+          <a href="https://editor.swagger.io/" className="font-semibold">Freecycle</a>
+        </div>
+      </nav>
+      <Router>
+        <Routes>
+          <Route path="" element={<Index />} />
+        </Routes>
+      </Router>
+    </div>
+  );
+}
+```
+* https://github.com/PasinduJayalal/frameworks_and_languages_module/blob/7f6fc64dd8d58c6a7e75b4688bf17b3c263a814d/client/src/App.js#L2
+```
+import ReactDOM from 'react-dom/client';
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+```
+* https://github.com/PasinduJayalal/frameworks_and_languages_module/blob/7f6fc64dd8d58c6a7e75b4688bf17b3c263a814d/client/src/index.js#L2
+
+Navigation: It enables to switch between several pages without loading the entire page. Declarative Routing: It sets down routes in an understandable and straightforward manner, making it simple to maintain.Nested routes: Enables look structures and internal routes for complex programmes.
+* https://www.w3schools.com/react/react_router.asp
+
+### React Hooks
+
+The "useState" and "useLocation" hooks in React enable the control of a functional component's state. React Hooks offer a more straightforward and practical method of handling state by getting rid of the requirement for class parts.
+
+```
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
+
+const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const api = (params.get("api") || "/api/v1").replace(/\/$/, "");
+  const [items, setItems] = useState([]);
+
+  const [values, setValues] = useState({
+    user_id: "",
+    keywords: null,
+    description: "",
+    image: "",
+    lat: "",
+    lon: "",
+  });
+```
+* https://github.com/PasinduJayalal/frameworks_and_languages_module/blob/7f6fc64dd8d58c6a7e75b4688bf17b3c263a814d/client/src/scenes/items/index.jsx#L2
+
+Functional components : State can be controlled in function parts without the need for class parts.Simplified Syntax: Managing state in a convenient method is made available by the useState hook. Scalability: Enables the use of several triggers to easily handle multiple components of an object.
+* https://www.w3schools.com/react/react_hooks.asp
 
 
 Client Language Features
