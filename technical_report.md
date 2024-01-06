@@ -6,8 +6,7 @@ Technical Report
 This technical report will delve into the world of web development and take a look at ways to improve on prototypes of Freecycle-Inc's existing FreeCycle platform. The report will outline the advantages of ReactJS (Client-Side framework) and Falcon (Server-Side framework).
 Standing at the center of modern web development is React, a JavaScript library for building user interfaces. Its component-based architecture, virtual DOM and unidirectional data flow give developers a very powerful means of building dynamic and reactive applications. The report will examine how well suited React is to the FreeCycle platform and explain its pluses and minuses.
 The server-side of our project is provided simplicity and speed by the minimalist Python web framework Falcon. In this way, the requirements for ease of use and performance accord well with Falcon's needs. This report will evaluate how well Falcon has been supporting the backend infrastructure of FreeCycle.
-Tailwind CSS, a utility-based approach to frontend design. Its utility classes make for rapid prototyping and simplified maintenance. This report will examine how Tailwind CSS helps with the graphics front of FreeCycle, looking at its effect on design uniformity and developer convenience.
-As this make the way through the subtleties of each one, this report intends to give a broad overview--outlining some features and advantages but also pointing out possible downsides of the current frameless prototype (without frameworks) should not be used as the foundation for future enhancements. In this way it is possible to establish a basis for rational decision making in developing the existing prototype into a complete industrial commodity.
+Tailwind CSS, a utility-based approach to frontend design. Its utility classes make for rapid prototyping and simplified maintenance. As this make the way through the subtleties of each one, this report intends to give a broad overview--outlining some features and advantages but also pointing out possible downsides of the current frameless prototype (without frameworks) should not be used as the foundation for future enhancements. In this way it is possible to establish a basis for rational decision making in developing the existing prototype into a complete industrial commodity.
 
 Critique of Server/Client prototype
 ---------------------
@@ -152,7 +151,7 @@ The on_websocket() responder coroutine is required for the resource class to ope
 * https://falcon.readthedocs.io/en/stable/api/websocket.html#ws
 
 Server Language Features (Python)
------------------------
+---------------------------------
 
 ### Dynamically Typed Language
 Python is a language with typing that is dynamic. In other words, it is not needed to declare the data types of the variables that is defined in Python. Based on the types of the expression's part sections, the Python interpreter's responsibility is to determine the data types of the variables at runtime. Python specifically uses duck typing. "If it looks like a duck, swims like a duck, and quacks like a duck, it must be a duck," is what this saying implies.
@@ -214,7 +213,7 @@ json is used to parse html request body into a python variable. In this instance
 
 
 ReactJS Client Framework Features
--------------------------
+---------------------------------
 
 ### Component-Based Architecture
 
@@ -319,22 +318,67 @@ Functional components : State can be controlled in function parts without the ne
 * https://www.w3schools.com/react/react_hooks.asp
 
 
-Client Language Features
-------------------------
+Client Language Features (JavaScript)
+-------------------------------------
 
-### (name of Feature 1)
+### Objects and fuctions as first-class citizens
 
-(Technical description of the feature - 40ish words)
-(A code block snippet example demonstrating the feature)
-(Explain the problem-this-is-solving/why/benefits/problems - 40ish words)
-(Provide reference urls to your sources of information about the feature - required)
+The definition of the term First Class Citizen is "being able to do what everyone else can do". In JavaScript, all non-primitive data types that is, data types such as Arrays, Functions, Symbols, and so on are basically objects that inherit all of the attributes of the Object prototype. The prototype in JavaScript Objects is the most basic prototype available. They can be assigned to variables for manipulation, supplied as references, and returned from functions. Since that Object is also the prototype of functions, this concept is also applied to functions.
 
-### (name of Feature 2)
+```
+<form onSubmit={handleSubmit}>
+```
+* https://github.com/PasinduJayalal/frameworks_and_languages_module/blob/72e9b6e93aa7a07f4b23326f07ce1ddfc1ae5ce0/client/src/scenes/items/index.jsx#L93
 
-(Technical description of the feature - 40ish words)
-(A code block snippet example demonstrating the feature)
-(Explain the problem-this-is-solving/why/benefits/problems - 40ish words)
-(Provide reference urls to your sources of information about the feature - required)
+```
+onChange={handleInput}
+```
+* https://github.com/PasinduJayalal/frameworks_and_languages_module/blob/72e9b6e93aa7a07f4b23326f07ce1ddfc1ae5ce0/client/src/scenes/items/index.jsx#L101
+
+In this instance onSubmit and onChange attributes are expecting a function to be passed as it's values, snice functions are First Class Citizens therefore, handleSubmit and handleInput functions are passed as call-backs to the onSubmit and onChange events.
+
+* https://www.interviewbit.com/blog/javascript-features/
+
+### Event Handling
+
+An event is an activity or occurrence in a system that is reported so that the software has the ability to react appropriately. For instance, when a user presses a button, the software is instructed by the system to display an information box in response to the button click event. Developers may handle events and even create custom events with JavaScript.
+ 
+ ```
+    const handleSubmit = (event) => {
+    event.preventDefault(); //Stop the website from refreshing each time when the submit button is clicked.
+
+    const isAnyValueEmpty = Object.entries(values).every(
+      ([key, value]) => key === "image" || value !== ""
+    ); //Verify whether any of the essential fields are empty except image field. 
+
+    if (!isAnyValueEmpty) {
+      alert(" Some fields are empty");
+    } else {
+      clearForm(); // Function to clear the form
+      values.keywords = values.keywords.split(",");
+      // Make a POST request to add the new item to the server
+      axios
+        .post(api + "/item", values)
+        .then((res) => {
+          console.log("Post successful ", { res });
+          displayitems();
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+ ```
+ * https://github.com/PasinduJayalal/frameworks_and_languages_module/blob/72e9b6e93aa7a07f4b23326f07ce1ddfc1ae5ce0/client/src/scenes/items/index.jsx#L48
+ 
+```
+  const handleInput = (event) => {
+    setValues((prev) => ({ ...prev, [event.target.name]: event.target.value }));
+  };
+```
+* https://github.com/PasinduJayalal/frameworks_and_languages_module/blob/72e9b6e93aa7a07f4b23326f07ce1ddfc1ae5ce0/client/src/scenes/items/index.jsx#L26
+
+In this example, these custom handleInput and handleSubmit functions are designed to handle onSubmit and onChange events.
+
+* https://www.interviewbit.com/blog/javascript-features/
 
 
 
@@ -344,19 +388,3 @@ Conclusions
 (justify why frameworks are recommended - 120ish words)
 (justify which frameworks should be used and why 180ish words)
 
-
-Unsorted Notes From Lecture
-===========================
-
-Middleware does the pre/post responses which are reusable components to make the code execute faster and fill out the missing functionalities. 
-
-example_server where the routing is handle in server.py
-https://github.com/PasinduJayalal/frameworks_and_languages_module/blob/9950911254ad65f13ea9953ea7bcdf897dd5362d/example_server/app/server.py#L21
-
-example_server where the CORS headers set
-https://github.com/PasinduJayalal/frameworks_and_languages_module/blob/9950911254ad65f13ea9953ea7bcdf897dd5362d/example_server/app/web_utils.py#L58
-
-
-https://github.com/PasinduJayalal/frameworks_and_languages_module/blob/9950911254ad65f13ea9953ea7bcdf897dd5362d/example_client/index.html#L403
-
-https://github.com/PasinduJayalal/frameworks_and_languages_module/blob/9950911254ad65f13ea9953ea7bcdf897dd5362d/example_client/index.html#L442
