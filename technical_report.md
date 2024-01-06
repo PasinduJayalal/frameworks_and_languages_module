@@ -151,23 +151,65 @@ The on_websocket() responder coroutine is required for the resource class to ope
 * https://www.tutorialspoint.com/python_falcon/python_falcon_websocket.htm
 * https://falcon.readthedocs.io/en/stable/api/websocket.html#ws
 
-Server Language Features
+Server Language Features (Python)
 -----------------------
 
-### (name of Feature 1)
+### Dynamically Typed Language
+Python is a language with typing that is dynamic. In other words, it is not needed to declare the data types of the variables that is defined in Python. Based on the types of the expression's part sections, the Python interpreter's responsibility is to determine the data types of the variables at runtime. Python specifically uses duck typing. "If it looks like a duck, swims like a duck, and quacks like a duck, it must be a duck," is what this saying implies.
 
-(Technical description of the feature - 40ish words)
-(A code block snippet example demonstrating the feature)
-(Explain the problem-this-is-solving/why/benefits/problems - 40ish words)
-(Provide reference urls to your sources of information about the feature - required)
+```
+# Falcon application setup
+app = falcon.App(middleware=[CORSMiddleware()])
 
+# Sample item data
+items = [
+    {
+        "id": 0,
+        "user_id": "user1234",
+        "keywords": [
+            "hammer",
+            "nails",
+            "tools"
+        ],
+        "description": "A hammer and nails set",
+        "image": "https://placekitten.com/200/300",
+        "lat": 51.2798438,
+        "lon": 1.0830275,
+        "date_from": "2023-10-25T21:39:22.733Z",
+        "date_to": "2023-10-25T21:39:22.733Z"
+    }
+]
+```
+* https://github.com/PasinduJayalal/frameworks_and_languages_module/blob/bc91c657cbac3ec3960f64bd71556436f7f2d51f/server/app.py#L22
 
-### (name of Feature 2)
+In this instance, app and item is declared without mentioning a data type. Python interpreter is responsible to determined the data types of the variables at runtime
 
-(Technical description of the feature - 40ish words)
-(A code block snippet example demonstrating the feature)
-(Explain the problem-this-is-solving/why/benefits/problems - 40ish words)
-(Provide reference urls to your sources of information about the feature - required)
+* https://www.interviewbit.com/blog/features-of-python/
+
+### Large Standard Library
+
+The extensive standard library that Python offers to its users is one of the key reasons that the language is so popular nowadays. With a wide range of packages and modules like json, random, datetime,and many more that have common and significant features, the Python standard library is quite extensive. The developers will save time and effort if they do not have to start from scratch if the code for certain feature is already there in these modules and packages. 
+
+```
+import json
+import random
+from datetime import datetime
+```
+* https://github.com/PasinduJayalal/frameworks_and_languages_module/blob/bc91c657cbac3ec3960f64bd71556436f7f2d51f/server/app.py#L3
+
+```
+data = json.load(req.bounded_stream)
+```
+* https://github.com/PasinduJayalal/frameworks_and_languages_module/blob/bc91c657cbac3ec3960f64bd71556436f7f2d51f/server/app.py#L64
+
+```
+"id" : random.randint(100, 999),
+```
+* https://github.com/PasinduJayalal/frameworks_and_languages_module/blob/bc91c657cbac3ec3960f64bd71556436f7f2d51f/server/app.py#L76
+
+json is used to parse html request body into a python variable. In this instance random is used to generate random numbers between 100-999.
+
+* https://www.interviewbit.com/blog/features-of-python/
 
 
 
@@ -175,7 +217,9 @@ ReactJS Client Framework Features
 -------------------------
 
 ### Component-Based Architecture
+
 React's component creation method allows developers to break up large, complex user interfaces into more manageable pieces. An example of this can be seen in the App.js where the index.jsx component is imported and used. Every component looks after its look, actions, and state. This keeps the code organised and facilitates future problem-solving and reusability.
+
 ```
 import Index from "./scenes/items";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
@@ -201,7 +245,9 @@ export default App;
 ```
 * https://github.com/PasinduJayalal/frameworks_and_languages_module/blob/7f6fc64dd8d58c6a7e75b4688bf17b3c263a814d/client/src/App.js#L1
 
-Modularity: The programme can be made simpler and more efficient to maintain by using components like index.jsx in different areas.Isolation: Each component manages its own task, reducing unanticipated conflicts with other components of the programme.Reusability: Components can be easily reused into other projects or even various sections of the programme.
+Modularity: The programme can be made simpler and more efficient to maintain by using components like index.jsx in different areas. 
+Isolation: Each component manages its own task, reducing unanticipated conflicts with other components of the programme.
+Reusability: Components can be easily reused into other projects or even various sections of the programme.
 
 * https://www.codingninjas.com/studio/library/features-of-react-js
 * https://legacy.reactjs.org/docs/components-and-props.html
