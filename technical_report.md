@@ -93,7 +93,7 @@ Falcon Server Framework Features
 
 ### Clean Middleware Implementation:
 
-To be able to manage Cross-Origin Resource Sharing, the CORS middleware elegant is dependable and easily included into the Falcon software. This illustrates Falcon's dedication to minimalism without sacrificing functionality.
+To be able to manage Cross-Origin Resource Sharing, the CORS middleware elegant is dependable and easily included into the Falcon application. This illustrates Falcon's dedication to minimalism without sacrificing functionality.
 ```
 class CORSMiddleware:
     def process_request(self, req, resp):
